@@ -1,0 +1,304 @@
+#ifndef XMODEL_H
+#define XMODEL_H
+
+#include "iModel.h"
+#include "xAnim.h"
+#include "xModelBucket.h"
+#include "xLightKit.h"
+
+#include <rpworld.h>
+
+struct xSphere;
+struct xSurface;
+struct xLight;
+template <class T> struct basic_rect;
+
+struct xModelInstance;
+struct xModelPool;
+
+#if DEBUG || RELEASE
+extern bool prelit_and_thats_the_way_we_likes_it;
+#endif
+
+enum eModelPoolStressor
+{
+    eModelPoolStressor_Master,
+    eModelPoolStressor_Destructible,
+    eModelPoolStressor_MainLoop,
+    eModelPoolStressor_SwitchScenes,
+    eModelPoolStressor_SceneReset,
+    eModelPoolStressor_Menu,
+    eModelPoolStressor_NPCProjectileInit,
+    eModelPoolStressor_NumStressors
+};
+
+// xModelInstance::Flags
+enum
+{
+    ModelInstance_Render = 0x1,
+    ModelInstance_ChildTransform = 0x40,
+    ModelInstance_NoRender = 0x400
+};
+
+#define k_MAX_MODEL_LIGHTS 4
+
+struct xModelInstance
+{
+    xModelInstance* Next;
+    xModelInstance* Parent;
+    xModelPool* Pool;
+    xAnimPlay* Anim;
+    RpAtomic* Data;
+    xModelPipe Pipe;
+    U8 InFrustum;
+    U8 TrueClip;
+    S8 sortBias;
+    U8 modelpad;
+    F32 RedMultiplier;
+    F32 GreenMultiplier;
+    F32 BlueMultiplier;
+    F32 Alpha;
+    F32 FadeStart;
+    F32 FadeEnd;
+    xSurface* Surf;
+    xModelBucket** Bucket;
+    xModelInstance* BucketNext;
+    xLightKit* LightKit;
+    xLightKit* LightKitBlend;
+    F32 BlendDuration;
+    F32 BlendTimeRemaining;
+    void* Object;
+    U16 Flags;
+    U8 BoneCount;
+    U8 BoneIndex;
+    U8* BoneRemap;
+    RwMatrix* Mat;
+    xVec3 Scale;
+    xBox animBound;
+    xBox combinedAnimBound;
+    U32 modelID;
+    U32 shadowID;
+    struct
+    {
+        xVec3* verts;
+    } anim_coll;
+    xLight* lights[k_MAX_MODEL_LIGHTS];
+    F32 lightsDistance[k_MAX_MODEL_LIGHTS];
+};
+
+struct xModelPool
+{
+    xModelPool* Next;
+    U32 NumMatrices;
+    xModelInstance* List;
+};
+
+struct xModelPipeTable
+{
+    U32 ModelHashID;
+    U32 SubObjectBits;
+    xModelPipe Pipe;
+};
+
+struct xModelPipeLookup
+{
+    RpAtomic* model;
+    xModelPipe Pipe;
+};
+
+extern S32 xModelPipeNumTables;
+extern S32 xModelPipeCount[16];
+extern xModelPipeTable* xModelPipeData[16];
+extern S32 xModelLookupCount;
+extern xModelPipeLookup* xModelLookupList;
+extern S32 xModelInstStaticAlloc;
+extern xModelPipe modelDefaultPipe;
+
+struct xModelTag
+{
+    xVec3 v;
+    U32 matidx;
+    F32 wt[4];
+};
+
+#if DEBUG
+void xModelPoolStressTestEnable(eModelPoolStressor stressor);
+void xModelPoolStressTestDisable(eModelPoolStressor stressor);
+bool xModelPoolStressTesting();
+#else
+inline bool xModelPoolStressTesting()
+{
+    return false;
+}
+#endif
+
+#define xModelInstanceCheckAlloc(m, name) xModelInstanceCheckAlloc_L(__LINE__, m, name)
+#define xModelInstanceCheckAlloc_L(line, m, name)                                                 \
+    xASSERT_FMT_L(line, (m || xModelPoolStressTesting()), "xModelInstanceAlloc fn couldn't allocate pool space for Model %s !", name)
+
+#if DEBUG || RELEASE
+S32 xModelPipeFlagsToString(U32 flags, char* buffer, char delimeter); // UNUSED
+S32 xModelPipeToString(const xModelPipe& pipe, char* buffer, char delimeter); // UNUSED
+#endif
+xModelPipe xModelGetPipe(RpAtomic* model);
+void xModelInit();
+void xModelInitOnce();
+void xModelExit(); // UNUSED
+void xModelPoolInit(U32 count, U32 numMatrices);
+bool xModelInstanceAvailable(S32 bones, S32 need); // UNUSED
+xModelInstance* xModelInstanceAllocReuse(RpAtomic* data, void* object, U16 flags, U8 boneIndex, U8* boneRemap, xModelInstance* reuse_instance);
+#if DEBUG || RELEASE
+void xModelDebugPrintPoolUsage();
+#endif
+void xModelInstanceDump(); // UNUSED
+#if DEBUG || RELEASE
+void xModelInstanceFreeDebug(xModelInstance* modelInst, bool animFree, const char* file, S32 line, const char* function);
+#define xModelInstanceFree(modelInst, animFree) xModelInstanceFree_L(modelInst, animFree, __LINE__)
+#define xModelInstanceFree_L(modelInst, animFree, line) xModelInstanceFreeDebug(modelInst, animFree, __FILE__, line, __FUNCTION__)
+#else
+void xModelInstanceFree(xModelInstance* modelInst, bool animFree);
+#define xModelInstanceFree_L(modelInst, animFree, line) xModelInstanceFree(modelInst, animFree)
+#endif
+void xModelInstanceAttach(xModelInstance* inst, xModelInstance* parent);
+void xModelInstanceUpgradeBrotherShared(xModelInstance* inst, U32 flags); // UNUSED
+void xModelUpdate(xModelInstance* modelInst, F32 timeDelta);
+void xModelEvalSingle(xModelInstance* modelInst, xBox* combinedAnimBound);
+void xModelEval(xModelInstance* modelInst);
+void xModelRenderSingle(xModelInstance* modelInst);
+void xModelRender(xModelInstance* modelInst);
+void xModelRender2D(xModelInstance* modelInst, basic_rect<F32>* sr, xVec3* from, xVec3* to, F32); // UNUSED
+void xModelRender2D(const xModelInstance& model, const basic_rect<F32>& r, const xVec3& from, const xVec3& to);
+void xModelRender2DTex(xModelInstance* modelInst, basic_rect<F32>* sr, xVec3*, xVec3*, F32); // UNUSED
+void xModel_SceneEnter(RpWorld* world);
+void xModel_SceneExit(RpWorld* world);
+
+extern RpMorphTarget anim_coll_old_mt;
+
+void xModelAnimCollStart(xModelInstance& m);
+void xModelAnimCollRefresh(const xModelInstance& cm);
+void xModelGetBoneLocation(xVec3& loc, const xModelInstance& model, size_t index);
+void xModelGetBoneMat(xMat3x3& mat, const xModelInstance& model, size_t index); // UNUSED
+void xModelGetBoneMat(xMat4x3& mat, const xModelInstance& model, size_t index);
+void xModelGetBoneMat(xMat4x3& mat, const xModelInstance& model, size_t index, const xVec3& offset); // UNUSED
+void xModelGetBoneLocationScaled(xVec3& loc, const xModelInstance& model, size_t index);
+void xModelGetBoneMatScaled(xMat3x3& mat, const xModelInstance& model, size_t index); // UNUSED
+void xModelGetBoneMatScaled(xMat4x3& mat, const xModelInstance& model, size_t index); // UNUSED
+S32 xModelSphereCull(xSphere* sphere);
+S32 xModelSphereCullPlusShadow(xSphere* sphere, xVec3* shadowVec, S32* shadowOutside);
+S32 xModelBoxCull(xBox* box);
+S32 xModelBoxCullPlusShadow(xBox* box, xVec3* shadowVec, S32* shadowOutside);
+S32 xModelCullGroup(xModelInstance* minst);
+S32 xModelCullGroupPlusShadow(xModelInstance* minst, F32 shadowDepth, S32* shadowOutside);
+S32 xModelCullSingle(xModelInstance* minst);
+void xModelSetLightKit(xModelInstance* minst, xLightKit* lightKit, F32 transitionTime);
+void xModelCloneAtomic(RpAtomic** out, S32 out_size, RpAtomic* in); // UNUSED
+bool xModelIsPreinstanced(const xModelInstance* model);
+bool xModelGetPipe(U32 modelID, U32 atomicNumber, xModelPipe** pipe);
+RpAtomic* xModelFindAtomic(U32 id, U32* actual_id);
+#if DEBUG || RELEASE
+void xModelRenderLogSetup();
+void xModelRenderLogBegin();
+void xModelRenderLogEnd();
+void xModelRenderLogAdd(RpAtomic* model, bool cloned);
+#endif
+S32 xModelGetNumAtomics(RpAtomic& model);
+bool xModelIsInFreeList(const xModelInstance* instance); // UNUSED
+
+inline xMat4x3* xModelGetFrame(xModelInstance* model)
+{
+    xASSERT_L(855, model);
+    xASSERT_L(856, model->Mat);
+    return (xMat4x3*)model->Mat;
+}
+
+inline void xModelSetFrame(xModelInstance* model, const xMat4x3* frame)
+{
+    xASSERT_L(861, model);
+    xASSERT_L(862, model->Mat);
+    xMat4x3Copy((xMat4x3*)model->Mat, frame);
+}
+
+inline xSphere* xModelGetLocalSBound(xModelInstance* model)
+{
+    xASSERT_L(867, model);
+    xASSERT_L(868, model->Data);
+    return (xSphere*)RpAtomicGetBoundingSphere(model->Data);
+}
+
+inline void xModelSetScale(xModelInstance* model, F32 scale)
+{
+    for (; model; model = model->Next) {
+        model->Scale.x = scale;
+        model->Scale.y = scale;
+        model->Scale.z = scale;
+    }
+}
+
+inline bool xModelAnimCollDirty(const xModelInstance& m)
+{
+    return (m.Flags & 0x1800) == 0x800;
+}
+
+inline void xModelAnimCollApply(const xModelInstance& cm)
+{
+    xModelInstance& m = (xModelInstance&)cm;
+    if (xModelAnimCollDirty(m)) xModelAnimCollRefresh(m);
+    RpGeometry* geom = RpAtomicGetGeometry(m.Data);
+    RpMorphTarget* mt = RpGeometryGetMorphTarget(geom, 0);
+
+    anim_coll_old_mt.verts = mt->verts;
+    mt->verts = (RwV3d*)m.anim_coll.verts;
+}
+
+inline void xModelAnimCollRestore(const xModelInstance& cm)
+{
+    xModelInstance& m = (xModelInstance&)cm;
+    RpGeometry* geom = RpAtomicGetGeometry(m.Data);
+    RpMorphTarget* mt = RpGeometryGetMorphTarget(geom, 0);
+    mt->verts = anim_coll_old_mt.verts;
+}
+
+inline xModelInstance* xModelInstanceAlloc(RpAtomic* data, void* object, U16 flags, U8 boneIndex, U8* boneRemap)
+{
+    return xModelInstanceAllocReuse(data, object, flags, boneIndex, boneRemap, NULL);
+}
+
+inline void xModelSetMaterialAlpha(xModelInstance* modelInst, U8 alpha)
+{
+    xASSERT_L(1064, modelInst);
+    iModelSetMaterialAlpha(modelInst->Data, alpha);
+}
+
+inline void xModelMaterialMul(xModelInstance* modelInst, F32 rm, F32 gm, F32 bm)
+{
+    xASSERT_L(1076, modelInst);
+    xASSERT_L(1077, modelInst->Data);
+    iModelMaterialMul(modelInst->Data, rm, gm, bm);
+}
+
+inline void xModelResetMaterial(xModelInstance* modelInst)
+{
+    xASSERT_L(1085, modelInst);
+    xASSERT_L(1086, modelInst->Data);
+    iModelResetMaterial(modelInst->Data);
+}
+
+#if DEBUG || RELEASE
+extern bool render_log_enabled;
+extern xEnt* render_log_entity;
+
+inline bool xModelRenderLogEnabled()
+{
+    return render_log_enabled;
+}
+
+inline void xModelRenderLogSetEntity(xEnt* ent)
+{
+    render_log_entity = ent;
+}
+#endif
+
+extern S32 xModelBucketEnabled;
+extern S32 xModelAlphaBucketEnabled;
+
+#endif

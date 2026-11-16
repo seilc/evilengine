@@ -1,0 +1,25 @@
+#ifndef _MSL_CSTRING
+#define _MSL_CSTRING
+
+#include <string.h>
+
+#pragma push
+#pragma sym off
+
+namespace std {
+
+inline char* strchr(char* s, int c)
+{
+    return ::strchr(static_cast<const char*>(s), c);
+}
+
+inline char* strstr(char* s1, const char* s2)
+{
+    return ::strstr(static_cast<const char*>(s1), s2);
+}
+
+}
+
+#pragma pop
+
+#endif

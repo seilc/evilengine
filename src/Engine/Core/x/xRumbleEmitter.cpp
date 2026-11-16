@@ -1,0 +1,326 @@
+#include "xCommon.h"
+#include "xRumbleEmitter.h"
+
+#include "zEvent.h"
+#include "xTRC.h"
+#include "xRumbleManager.h"
+#include "xDebugTweak.h"
+#include "xGlobals.h"
+#include "zScene.h"
+#include "zPlayer.h"
+
+namespace {
+
+void emitter_EventCB(xBase*, xBase* to, U32 toEvent, const F32* toParam, xBase*, U32)
+{
+    switch (toEvent) {
+    case eEventStartRumbleEffect:
+    {
+        xRumble::emitterBase* pEffect = (xRumble::emitterBase*)to;
+        S32 startidx = 0;
+        while (xTRCPadFindFirst(startidx, TRC_PadActive)) {
+            S32 padPort = xTRCPadGetPadPort(startidx);
+            xASSERT_L(51, padPort >= 0 && padPort < k_MAX_TRC_PADS);
+            xRumble::Manager::Get().Add(&mPad[padPort], pEffect);
+            startidx++;
+        }
+        break;
+    }
+    case eEventStopRumbleEffect:
+    {
+        xASSERT_FMT_L(60, (toParam && (toParam[0] >= 0.0f) && (toParam[0] < 4.0f)),
+                     "No such pad exists, so of course it can't rumble");
+        
+        xRumble::emitterBase* pEffect = (xRumble::emitterBase*)to;
+        S32 startidx = 0;
+        while (xTRCPadFindFirst(startidx, TRC_PadActive)) {
+            S32 padPort = xTRCPadGetPadPort(startidx);
+            xASSERT_L(68, padPort >= 0 && padPort < k_MAX_TRC_PADS);
+            xRumble::Manager::Get().Stop(&mPad[padPort], pEffect);
+            startidx++;
+        }
+        break;
+    }
+    }
+}
+
+}
+
+namespace xRumble {
+
+#if DEBUG || RELEASE
+void effectAsset::AddTweaks(const char* prefix)
+{
+    xAUTOTWEAK(prefix, "time", &time, 0, 100, NULL, NULL, 0, false);
+    xAUTOTWEAK(prefix, "intensity", &intensity, 0, 1, NULL, NULL, 0, false);
+    xAUTOTWEAK(prefix, "priority", &priority, 0, 255, NULL, NULL, 0, false);
+    xAUTOTWEAK(prefix, "param1", &param1, 0, 255, NULL, NULL, 0, false);
+    xAUTOTWEAK(prefix, "Screen Shake|magnitude", &shakeMagnitude, 0, 100, NULL, NULL, 0, false);
+    xAUTOTWEAK(prefix, "Screen Shake|cycle max", &shakeCycleMax, 0, 100, NULL, NULL, 0, false);
+    xAUTOTWEAK(prefix, "Screen Shake|Rot mag", &shakeRotationalMagnitude, 0, 100, NULL, NULL, 0, false);
+    xAUTOTWEAK_BOOL(prefix, "Screen Shake|shake Y axis", &shakeY, NULL, NULL, 0, false);
+}
+#endif
+
+F32 effectAsset::GetIntensity(F32 currentTime, F32 totalTime) const
+{
+    switch (type) {
+    case 0:
+        return 1.0f;
+    case 1:
+    {
+        F32 pulsePeriod = param1 + param2;
+        if (currentTime - pulsePeriod * (U32)(currentTime / pulsePeriod) < param1) {
+            return 1.0f;
+        } else {
+            return 0.0f;
+        }
+    }
+    case 2:
+        return (1.0f - icos(2.0f * PI * param1 * currentTime)) / 2.0f;
+    case 3:
+        xASSERT_FMT_L(119, totalTime >= 0.0f, "You cannot use fade in/out with infinite length effects");
+        if (totalTime - currentTime <= param1) {
+            return (totalTime - currentTime) / param1;
+        } else {
+            return 1.0f;
+        }
+    case 4:
+        xASSERT_FMT_L(130, totalTime >= 0.0f, "You cannot use fade in/out with infinite length effects");
+        if (currentTime < param1) {
+            return currentTime / param1;
+        } else {
+            return 1.0f;
+        }
+    default:
+        xASSERT_FMT_L(140, FALSE, "Invalid rumble type");
+        return 0.0f;
+    }
+}
+
+void effect::Init(xBase& data, xDynAsset& asset, size_t asset_size)
+{
+    xDynAssetValidate_L(150, asset, asset_size, xRumble::effectAsset, "effect:Rumble");
+
+    new (&data) effect((effectAsset*)&asset);
+}
+
+effect::effect(effectAsset* pAsset)
+    : emitterBase()
+{
+    xBaseInit(this, pAsset);
+
+    pEffectAsset = pAsset;
+    eventFunc = emitter_EventCB;
+    
+    if (linkCount) {
+        link = (xLinkAsset*)((U8*)pAsset + sizeof(effectAsset));
+    }
+
+#if DEBUG || RELEASE
+    AddTweaks();
+#endif
+}
+
+#if DEBUG || RELEASE
+void effect::AddTweaks()
+{
+    char prefix[256];
+    sprintf(prefix, "FX|Rumble|Effect|%s|", xSceneID2Name(xglobals->sceneCur, id));
+    
+    pEffectAsset->AddTweaks(prefix);
+}
+#endif
+
+void boxEmitter::Init(xBase& data, xDynAsset& asset, size_t asset_size)
+{
+    xDynAssetValidate_L(184, asset, asset_size, xRumble::boxEmitterAsset, "effect:Rumble Box Emitter");
+
+    new (&data) boxEmitter((boxEmitterAsset*)&asset);
+}
+
+boxEmitter::boxEmitter(boxEmitterAsset* pAsset)
+    : emitterBase()
+{
+    xBaseInit(this, pAsset);
+
+    U32 size;
+    pEffectAsset = (effectAsset*)xSTFindAsset(pAsset->effectID, &size);
+
+    this->pAsset = pAsset;
+    eventFunc = emitter_EventCB;
+
+    if (linkCount) {
+        link = (xLinkAsset*)((U8*)pAsset + sizeof(boxEmitterAsset));
+    }
+}
+
+inline bool inBox(const xVec3& v, const xVec3& min, const xVec3& max)
+{
+    return v.x >= min.x && v.y >= min.y && v.z >= min.z &&
+           v.x <= max.x && v.y <= max.y && v.z <= max.z;
+}
+
+bool boxEmitter::GetIntensity(const xVec3& playerPos, F32& intensity) const
+{
+    intensity = 0.0f;
+
+    S32 charIndex = 0;
+    if (xglobals->players[1]->Get_humanPlayer() && !xglobals->players[1]->IsDead())
+        charIndex = 1;
+
+    if (pAsset->onlyOnFloor && !(xglobals->players[charIndex]->collis->colls[0].flags & k_HIT_IT)) {
+        return false;
+    }
+
+    if (inBox(playerPos, pAsset->minCorner, pAsset->maxCorner)) {
+        intensity = pEffectAsset->intensity;
+        return true;
+    }
+
+    return false;
+}
+
+void sphericalEmitter::Init(xBase& data, xDynAsset& asset, size_t asset_size)
+{
+    xDynAssetValidate_L(236, asset, asset_size, xRumble::sphericalEmitterAsset, "effect:Rumble Spherical Emitter");
+
+    new (&data) sphericalEmitter((sphericalEmitterAsset*)&asset);
+}
+
+sphericalEmitter::sphericalEmitter(sphericalEmitterAsset* pAsset)
+    : emitterBase()
+{
+    xBaseInit(this, pAsset);
+
+    this->pAsset = pAsset;
+    eventFunc = emitter_EventCB;
+
+    U32 size;
+    pEffectAsset = (effectAsset*)xSTFindAsset(pAsset->effectID, &size);
+
+    radiusSqrd = xsqr(pAsset->radius);
+    xASSERT_FMT_L(248, pAsset->radius, "The radius cannot be 0");
+
+    if (linkCount) {
+        link = (xLinkAsset*)((U8*)pAsset + sizeof(sphericalEmitterAsset));
+    }
+}
+
+bool sphericalEmitter::GetIntensity(const xVec3& playerPos, F32& intensity) const
+{
+    intensity = 0.0f;
+
+    F32 distSqrd = xVec3Dist2(&playerPos, &pAsset->position);
+
+    if (distSqrd > radiusSqrd) {
+        return false;
+    }
+
+    if (pAsset->onlyRumbleOnY && !xeq(pAsset->position.y / playerPos.y, 1.0f, 0.1f)) {
+        return false;
+    }
+
+    S32 charIndex = 0;
+    if (xglobals->players[1]->Get_humanPlayer() && !xglobals->players[1]->IsDead())
+        charIndex = 1;
+    
+    if (pAsset->onlyOnFloor && !xglobals->players[charIndex]->IsFloorColliding()) {
+        return false;
+    }
+
+    if (pAsset->fallOff) {
+        intensity = pEffectAsset->intensity * (1.0f - xsqrt(distSqrd) / pAsset->radius);
+    } else {
+        intensity = pEffectAsset->intensity;
+    }
+
+    return true;
+}
+
+void sphericalEmitter::UpdatePosition(const xVec3& playerPos) const
+{
+    xASSERT_L(291, pAsset);
+    pAsset->position = playerPos;
+}
+
+// UNUSED: needed to match (code from RotU GC)
+F32 sphericalEmitter::GetTimeLeft()
+{
+    F32 timeLeft = 0.0f;
+    S32 startidx = 0;
+    while (xTRCPadFindFirst(startidx, TRC_PadActive)) {
+        S32 padPort = xTRCPadGetPadPort(startidx);
+        xASSERT(padPort >= 0 && padPort < k_MAX_TRC_PADS);
+        timeLeft += Manager::Get().GetRumbleTimeLeft(&mPad[padPort], this);
+        startidx++;
+    }
+    return timeLeft;
+}
+
+// UNUSED: needed to match (code from RotU GC)
+FreezableObjectEffect::FreezableObjectEffect()
+    : emitterBase()
+{
+    mDefaultSphericalEmitterAsset = NULL;
+    pEffectAsset = NULL;
+}
+
+// UNUSED: needed to match (code from RotU GC)
+void FreezableObjectEffect::Init(U32 sphereEmitterID)
+{
+    mDefaultSphericalEmitterAsset = (sphericalEmitterAsset*)xSTFindAsset(sphereEmitterID, NULL);
+    if (!mDefaultSphericalEmitterAsset) {
+        xFAIL_MSG("Unable to find FREEZABLE_OBJECT_RUMBLE_EMIT. Please repack BOOT.SDF");
+        return;
+    }
+    pEffectAsset = (effectAsset*)xSTFindAsset(mDefaultSphericalEmitterAsset->effectID, NULL);
+    if (!pEffectAsset) {
+        xFAIL_MSG("Unable to find FREEZABLE_OBJECT_RUMBLE. Please repack BOOT.SDF");
+        return;
+    }
+    xBaseInit(this, mDefaultSphericalEmitterAsset);
+    eventFunc = emitter_EventCB;
+    mModifiableAsset = *mDefaultSphericalEmitterAsset;
+    mRadiusSqrd = xsqr(mModifiableAsset.radius);
+}
+
+// UNUSED: needed to match (code from RotU GC)
+bool FreezableObjectEffect::GetIntensity(const xVec3& position, F32& intensity) const
+{
+    intensity = 0.0f;
+
+    if (!pEffectAsset) {
+        return false;
+    }
+
+    F32 distSqrd = xVec3Dist2(&position, &mModifiableAsset.position);
+
+    if (distSqrd > mRadiusSqrd) {
+        return false;
+    }
+
+    if (mModifiableAsset.onlyRumbleOnY && !xeq(mModifiableAsset.position.y / position.y, 1.0f, 0.1f)) {
+        return false;
+    }
+
+    if (mModifiableAsset.onlyOnFloor) {
+        xFAIL_ONCE("%s", "OnlyOnFloor is ignored by the FreezableObject Rumble Effect.");
+    }
+
+    if (mModifiableAsset.fallOff) {
+        intensity = pEffectAsset->intensity * (1.0f - xsqrt(distSqrd) / mModifiableAsset.radius);
+    } else {
+        intensity = pEffectAsset->intensity;
+    }
+
+    return true;
+}
+
+// UNUSED: needed to match (code from RotU GC)
+void FreezableObjectEffect::UpdatePosition(xVec3& newPosition)
+{
+    mModifiableAsset.position = newPosition;
+}
+
+}

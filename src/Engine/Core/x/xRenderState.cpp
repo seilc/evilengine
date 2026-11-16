@@ -1,0 +1,243 @@
+#include "xCommon.h"
+#include "xRenderState.h"
+
+#include "xMath.h"
+#include "xDebug.h"
+
+RwReal old_near_plane = -HUGE;
+RwReal old_far_plane = -HUGE;
+
+void xRenderSceneEnter()
+{
+}
+
+void xRenderSceneExit()
+{
+}
+
+void xRenderStateSetZBias(RwReal bias)
+{
+    xASSERT_L(182, (old_near_plane == -HUGE) && (old_far_plane == -HUGE));
+
+    RwCamera* cam = RwCameraGetCurrentCamera();
+    xASSERT_L(184, cam != 0);
+    if (!cam) return;
+
+    static xTWEAKABLE RwReal bias_scale = 0.005f;
+    bias *= bias_scale;
+
+    old_near_plane = RwCameraGetNearClipPlane(cam);
+    old_far_plane = RwCameraGetFarClipPlane(cam);
+
+    RwCameraEndUpdate(cam);
+    RwCameraSetNearClipPlane(cam, bias + old_near_plane);
+    RwCameraSetFarClipPlane(cam, bias + old_far_plane);
+    RwCameraBeginUpdate(cam);
+}
+
+void xRenderStateResetZBias()
+{
+    xASSERT_L(202, (old_near_plane != -HUGE) && (old_far_plane != -HUGE));
+
+    RwCamera* cam = RwCameraGetCurrentCamera();
+    xASSERT_L(204, cam != 0);
+    if (!cam) return;
+
+    RwCameraEndUpdate(cam);
+    RwCameraSetNearClipPlane(cam, old_near_plane);
+    RwCameraSetFarClipPlane(cam, old_far_plane);
+    RwCameraBeginUpdate(cam);
+
+    old_near_plane = old_far_plane = -HUGE;
+}
+
+static void* old_alpha_discard_value_gc;
+
+void xRenderStateSetAlphaDiscard(RwInt32 value)
+{
+    RwRenderStateGet(rwRENDERSTATEALPHATESTFUNCTIONREF, &old_alpha_discard_value_gc);
+
+    RwGameCubeSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_GEQUAL, value);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_GEQUAL, value);
+
+    if (value > 0) {
+        _rwDlRenderStateSetZCompLoc(FALSE);
+        GXSetZCompLoc(GX_FALSE);
+    } else {
+        _rwDlRenderStateSetZCompLoc(TRUE);
+        GXSetZCompLoc(GX_TRUE);
+    }
+}
+
+void xRenderStateResetAlphaDiscard()
+{
+    xRenderStateSetAlphaDiscard(0);
+}
+
+void xRenderFixUntexturedBegin(RpAtomic*)
+{
+}
+
+void xRenderFixUntexturedEnd(RpAtomic*)
+{
+}
+
+void xRenderFixIMBegin()
+{
+}
+
+void xRenderFixIMEnd()
+{
+}
+
+#if DEBUG || RELEASE
+RwBool xRenderStateCheckBlendModes(RwBlendFunction desiredSrcBlend, RwBlendFunction desiredDestBlend)
+{
+    RwBlendFunction currentSrcBlend, currentDestBlend;
+    xRenderStateBlendModesGet(&currentSrcBlend, &currentDestBlend);
+
+    if (currentSrcBlend != desiredSrcBlend) {
+        return TRUE;
+    }
+
+    if (currentDestBlend != desiredDestBlend) {
+        xASSERT_FMT_L(1466, 0, "Unexpected SRCBLEND.\n"
+                              "Expected: 0x%08X Actual: 0x%08X", desiredDestBlend, currentDestBlend);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+RwBool xRenderStateCheckState(RwRenderState state, void* desiredValue)
+{
+    if (state == rwRENDERSTATESRCBLEND || state == rwRENDERSTATEDESTBLEND) {
+        xFAIL_MSG_L(1478, "Please do not use RwRenderStateSet for SRCBLEND, DESTBLEND.\n"
+                          "Use xRenderStateCheckBlendModes.");
+        return TRUE;
+    }
+
+    RwUInt32 curValue;
+    RwRenderStateGetMacro(state, (void*)&curValue);
+
+    if (curValue != (RwUInt32)desiredValue) {
+        static RwBool shhhh = FALSE;
+        if (shhhh) {
+            iprintf("Unexpected Render State."
+                    "State %d Expected: 0x%08X Actual: 0x%08X", state, desiredValue, curValue);
+        } else {
+            xASSERT_FMT_L(1495, 0, "Unexpected Render State.\n"
+                                  "State %d Expected: 0x%08X Actual: 0x%08X", state, desiredValue, curValue);
+        }
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+void RwRenderStateSetWrapper(RwRenderState state, void* value)
+{
+    if (state == rwRENDERSTATESRCBLEND ||
+        state == rwRENDERSTATEDESTBLEND ||
+        state == rwRENDERSTATEZWRITEENABLE ||
+        state == rwRENDERSTATEZTESTENABLE) {
+        xFAIL_MSG_L(1606, "Please do not use RwRenderStateSet for SRCBLEND, DESTBLEND, ZWRITE and ZTEST.\n"
+                          "Use xRenderStateBlendModesSet, xRenderStateZModesSet or xRenderStateBlendAndZModesSet.");
+        return;
+    }
+
+    RwBool ret = RwRenderStateSetMacro(state, value);
+    if (!ret && state != rwRENDERSTATESRCBLEND) {
+        RwInt32 asdf = 1234;
+    }
+}
+
+RwBool RwRenderStateGetWrapper(RwRenderState state, void* value)
+{
+    if (state == rwRENDERSTATESRCBLEND || state == rwRENDERSTATEDESTBLEND) {
+        xFAIL_MSG_L(1630, "Please do not use RwRenderStateGet for SRCBLEND and DESTBLEND.\n"
+                          "Use xRenderStateBlendModesGet.");
+        return FALSE;
+    }
+
+    RwBool ret = RwRenderStateGetMacro(state, value);
+    if (!ret) {
+        RwInt32 asdf = 1234;
+    }
+    return ret;
+}
+#endif
+
+void xRenderStateBlendModesSet(RwBlendFunction srcBlend, RwBlendFunction destBlend)
+{
+    RwBool ret;
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATESRCBLEND, (void*)srcBlend);
+    if (!ret) {
+        xFAIL_FMT_L(2160, "Unable to set rwRENDERSTATESRCBLEND with value %d", srcBlend);
+    }
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATEDESTBLEND, (void*)destBlend);
+    if (!ret) {
+        xFAIL_FMT_L(2166, "Unable to set rwRENDERSTATEDESTBLEND with value %d", destBlend);
+    }
+}
+
+void xRenderStateZModesSet(RwBool ZWrite, RwBool ZTest)
+{
+    RwBool ret;
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATEZWRITEENABLE, (void*)ZWrite);
+    if (!ret) {
+        xFAIL_FMT_L(2176, "Unable to set rwRENDERSTATEZWRITEENABLE with value %d", ZWrite);
+    }
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATEZTESTENABLE, (void*)ZTest);
+    if (!ret) {
+        xFAIL_FMT_L(2182, "Unable to set rwRENDERSTATEZTESTENABLE with value %d", ZTest);
+    }
+}
+
+void xRenderStateBlendAndZModesSet(RwBlendFunction srcBlend, RwBlendFunction destBlend, RwBool ZWrite, RwBool ZTest)
+{
+    RwBool ret;
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATESRCBLEND, (void*)srcBlend);
+    if (!ret) {
+        xFAIL_FMT_L(2193, "Unable to set rwRENDERSTATESRCBLEND with value %d", srcBlend);
+    }
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATEDESTBLEND, (void*)destBlend);
+    if (!ret) {
+        xFAIL_FMT_L(2199, "Unable to set rwRENDERSTATEDESTBLEND with value %d", destBlend);
+    }
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATEZWRITEENABLE, (void*)ZWrite);
+    if (!ret) {
+        xFAIL_FMT_L(2205, "Unable to set rwRENDERSTATEZWRITEENABLE with value %d", ZWrite);
+    }
+
+    ret = RwRenderStateSetMacro(rwRENDERSTATEZTESTENABLE, (void*)ZTest);
+    if (!ret) {
+        xFAIL_FMT_L(2211, "Unable to set rwRENDERSTATEZTESTENABLE with value %d", ZTest);
+    }
+}
+
+void xRenderStateBlendModesGet(RwBlendFunction* srcBlend, RwBlendFunction* destBlend)
+{
+    RwBool ret;
+
+    if (srcBlend) {
+        ret = RwRenderStateGetMacro(rwRENDERSTATESRCBLEND, (void*)srcBlend);
+        if (!ret) {
+            xFAIL_FMT_L(2225, "Unable to get rwRENDERSTATESRCBLEND with value %d", srcBlend);
+        }
+    }
+
+    if (destBlend) {
+        ret = RwRenderStateGetMacro(rwRENDERSTATEDESTBLEND, (void*)destBlend);
+        if (!ret) {
+            xFAIL_FMT_L(2234, "Unable to get rwRENDERSTATEDESTBLEND with value %d", destBlend);
+        }
+    }
+}

@@ -1,0 +1,103 @@
+#ifndef XRAND_H
+#define XRAND_H
+
+#include "xDebug.h"
+
+struct xVec3;
+
+enum xRandomChoiceRule
+{
+    xRandomChoiceRule_ANY_EXCEPT_LAST,
+    xRandomChoiceRule_ANY,
+    xRandomChoiceRule_ANY_NOT_CHOSEN,
+    xRandomChoiceRule_IN_ORDER,
+    xRandomChoiceRule_IN_ORDER_RANDOM,
+    xRandomChoiceRule_COUNT
+};
+
+void init_genrand(U32 s);
+void init_by_array(U32* init_key, U32 key_length);
+void xrand_RandomInit();
+void xrand_SetRandomSeed(U32 nNewSeed); // UNUSED
+U32 xrand_GenRandInt32();
+F32 xrand_GenRandFloat();
+F32 xrand_GenRandFloatLessThanOne();
+U32 xrand_RandomChoice(U32& randomChoiceData, U8& randomChoiceDataSize, U32 maxCount, xRandomChoiceRule rule);
+void xRandUniformSpherePoints(xVec3* loc, S32 amount, F32 zmin, F32 zmax);
+
+U16 xrand_RandomInt16();
+U32 xrand_RandomInt32();
+F32 xrand_RandomFloat();
+
+inline U16 xrand_RandomInt16()
+{
+    return (U16)xrand_RandomInt32();
+}
+
+inline U32 xrand_RandomInt32()
+{
+    return xrand_GenRandInt32();
+}
+
+inline F32 xrand_RandomFloat()
+{
+    return xrand_GenRandFloat();
+}
+
+inline F32 xrand_RandomUnitFloatLessThan1()
+{
+    return xrand_GenRandFloatLessThanOne();
+}
+
+inline F32 xrand_RandomBipolarUnitFloat()
+{
+    return 2.0f * xrand_RandomFloat() - 1.0f;
+}
+
+inline F32 xrand_RandomFloatRange(F32 fMin, F32 fMax)
+{
+    F32 fRandUnitFloat = xrand_RandomFloat();
+    return fRandUnitFloat * fMax + (1.0f - fRandUnitFloat) * fMin;
+}
+
+inline F32 xrand_RandomBipolarUnitFloatWithGap(F32 fPosGap)
+{
+    xASSERT_L(102, fPosGap <= 1.0f && fPosGap >= 0.0f);
+
+    F32 fTemp = 2.0f * fPosGap;
+    F32 fRand = xrand_RandomFloatRange(fTemp - 1.0f, 1.0f);
+    if (fRand < fPosGap)
+        fRand -= fTemp;
+
+    return fRand;
+}
+
+inline U32 xrand_RandomChoice(U32 nChoice)
+{
+    xASSERT_L(124, nChoice <= 0xffff);
+    return (nChoice * xrand_RandomInt16()) / 0x10000;
+}
+
+inline S32 xrand_RandomRange(S32 nMin, S32 nMax)
+{
+    xASSERT_L(134, nMax >= nMin);
+
+    F32 fRange = nMax - nMin + 1;
+    S32 nRandInt = nMin + (S32)(fRange * xrand_RandomUnitFloatLessThan1());
+
+    return nRandInt;
+}
+
+inline bool xrand_RandomChance(F32 fChanceOfSuccess)
+{
+    xASSERT_L(148, fChanceOfSuccess>=0.0f && fChanceOfSuccess<=1.0f);
+    return xrand_RandomFloat() < fChanceOfSuccess;
+}
+
+inline F32 xurand()
+{
+    static const F32 scale = 1.0f / 4294967296.0f;
+    return scale * xrand_RandomInt32();
+}
+
+#endif

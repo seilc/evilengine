@@ -1,0 +1,71 @@
+#ifndef ZNPCBASEIN2_H
+#define ZNPCBASEIN2_H
+
+#include "xEnt.h"
+#include "zNPCAssetIN2.h"
+#include "zNPC.h"
+#include "zAnimFx.h"
+
+namespace zNPC {
+
+class zNPCBaseIN2 : public xEnt
+{
+protected:
+    zNPCInstance* inst;
+
+public:
+    virtual void change_instance(zNPCInstance* new_inst);
+    virtual ~zNPCBaseIN2();
+    virtual void init(zNPCInstance* init_inst);
+    virtual void timestep(xScene* xscn, F32 dt);
+    virtual void activate();
+    virtual void deactivate();
+    virtual void preupdate(F32 dt);
+    virtual void reset()
+    {
+        if (inst) {
+            xBaseInit(this, &inst->get_npc_asset()->ent_asset);
+            if (linkCount < 1) {
+                link = NULL;
+            } else {
+                char* ptr = (char*)inst->get_npc_asset();
+                ptr += inst->get_npc_asset_size();
+                S32 amt_linkdata = linkCount * sizeof(xLinkAsset);
+                xASSERT_FMT_L(152, ((amt_linkdata % 4)==0), "0x%08X", id);
+                amt_linkdata = (amt_linkdata + 3) & ~3;
+                link = (xLinkAsset*)(ptr - amt_linkdata);
+            }
+        }
+    }
+    virtual void update_bounds();
+    virtual void scene_setup();
+    virtual void render_npc();
+    virtual void render_npc_freezing();
+    virtual void render_extra();
+    virtual void post_render_cleanup();
+    virtual bool systemEvent(xBase* from, xBase* to, U32 to_event, const F32* to_param, xBase* to_param_widget, U32 to_param_widget_id);
+    virtual U32 get_throw_anim_code();
+    virtual F32 get_shadow_strength();
+    virtual xSndHandle play_sound(zAnimFxSoundGroup* sound);
+    virtual void destroy();
+    virtual void kill();
+    virtual void set_instance(zNPCInstance* inPtr);
+    virtual bool CanBeTargeted();
+    virtual void ExitingSpawnState();
+    virtual void ProjectileCollisionOn();
+    virtual void ProjectileCollisionOff();
+    virtual void PastUpdateDistCleanup();
+    virtual void VisibilityCullCleanup();
+
+#if DEBUG || RELEASE
+    virtual void ForceEnterDeathState();
+#endif
+
+#if DEBUG || RELEASE
+    U8 npc_selection;
+#endif
+};
+
+}
+
+#endif

@@ -1,0 +1,41 @@
+{
+    "configurations": [
+        {
+            "name": "Rat Debug",
+            "defines": [
+                "GAME=RAT",
+                "DEBUG=1",
+                "RWDEBUG"
+            ]
+        },
+        {
+            "name": "Rat Release",
+            "defines": [
+                "GAME=RAT",
+                "RELEASE=1"
+            ]
+        },
+        {
+            "name": "Rat MasterDebug",
+            "defines": [
+                "GAME=RAT",
+                "MASTERDEBUG=1"
+            ]
+        },
+        {
+            "name": "Rat Master",
+            "defines": [
+                "GAME=RAT",
+                "MASTER=1"
+            ]
+        },
+        {
+            "name": "RotU",
+            "defines": [
+                "GAME=ROTU",
+                "MASTER=1"
+            ]
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,174 @@
+#include "xCommon.h"
+#include "xIM.h"
+
+#include "xDebug.h"
+#include "xMemMgr.h"
+
+#include "decomp.h"
+
+#include <rwcore.h>
+
+void xIMLock(xIMLockContext& context, xIMFormat format, S32 vertCount)
+{
+    xASSERT_L(9, vertCount > 0);
+    xASSERT_L(10, !((format == XIM_TRILIST) && ((vertCount % 3) != 0)));
+
+    S32 pos_qwords = (vertCount * sizeof(xVec3) + (16-1)) / 16;
+    S32 uv_qwords = (vertCount * sizeof(xVec2) + (16-1)) / 16;
+    S32 color_qwords = (vertCount * sizeof(xColor) + (16-1)) / 16;
+    S32 alloc_qwords = pos_qwords + uv_qwords + color_qwords;
+
+    context.data = xMEMPUSHTEMP_L((alloc_qwords*16), 0, 18);
+
+    U8* data_buffer = (U8*)context.data;
+
+    context.pos = (xVec3*)data_buffer;
+    data_buffer += pos_qwords*16;
+
+    context.uv = (xVec2*)data_buffer;
+    data_buffer += uv_qwords*16;
+
+    context.color = (xColor*)data_buffer;
+    data_buffer += color_qwords*16;
+
+    xASSERT_L(28, ((U32)data_buffer - (U32)context.data) == (alloc_qwords*16));
+
+    context.vertCount = vertCount;
+    context.format = format;
+}
+
+// UNUSED: needed to match (code from Incredibles GC)
+void xIMLock(xIMLockContext& context, xIMFormat format, S32 vertCount, const xIMLockParameters& params)
+{
+    xASSERT(vertCount > 0);
+    xASSERT(!((format == XIM_TRILIST) && ((vertCount % 3) != 0)));
+
+    S32 pos_qwords = (vertCount * sizeof(xVec3) + (16-1)) / 16;
+    S32 uv_qwords = (vertCount * sizeof(xVec2) + (16-1)) / 16;
+    S32 color_qwords = (vertCount * sizeof(xColor) + (16-1)) / 16;
+    S32 alloc_qwords = 0;
+
+    if (!(params.flags & 0x1))
+        alloc_qwords += pos_qwords;
+
+    if (!(params.flags & 0x4))
+        alloc_qwords += uv_qwords;
+
+    if (!(params.flags & 0x10))
+        alloc_qwords += color_qwords;
+
+    context.data = xMEMPUSHTEMP((alloc_qwords*16), 0);
+
+    U8* data_buffer = (U8*)context.data;
+
+    if (params.flags & 0x1) {
+        xASSERT(params.cpos != 0);
+        context.pos = (xVec3*)params.cpos;
+    } else {
+        context.pos = (xVec3*)data_buffer;
+        data_buffer += pos_qwords*16;
+    }
+
+    if (params.flags & 0x4) {
+        xASSERT(params.cuv != 0);
+        context.uv = (xVec2*)params.cuv;
+    } else {
+        context.uv = (xVec2*)data_buffer;
+        data_buffer += uv_qwords*16;
+    }
+
+    if (params.flags & 0x10) {
+        xASSERT(params.ccolor != 0);
+        context.color = (xColor*)params.ccolor;
+    } else {
+        context.color = (xColor*)data_buffer;
+        data_buffer += color_qwords*16;
+    }
+
+    xASSERT(((U32)data_buffer - (U32)context.data) == (alloc_qwords*16));
+
+    context.vertCount = vertCount;
+    context.format = format;
+}
+
+DECOMP_FORCEACTIVE(
+    "(params1.cpos != 0) && (((int)params1.cpos & 15) == 0)",
+    "(params1.cuv != 0) && (((int)params1.cuv & 15) == 0)",
+    "(params1.ccolor != 0) && (((int)params1.ccolor & 15) == 0)",
+    "(params2.cpos != 0) && (((int)params2.cpos & 15) == 0)",
+    "(params2.cuv != 0) && (((int)params2.cuv & 15) == 0)",
+    "(params2.ccolor != 0) && (((int)params2.ccolor & 15) == 0)",
+    "((U32)data_buffer - (U32)context1.data) == (alloc_qwords*16)"
+)
+
+void xIMUnlock(xIMLockContext& context)
+{
+    if (context.data)
+        xMEMPOPTEMP(context.data);
+}
+
+void xIMRender(xIMLockContext& context, const xMat4x3* mat, U32 flags)
+{
+    S32 verts_size = context.vertCount;
+    const xVec3* pos = context.pos;
+    const xVec2* uv = context.uv;
+    const xColor* color = context.color;
+
+    if (flags == 0)
+        flags = (rwIM3D_VERTEXUV | rwIM3D_VERTEXXYZ | rwIM3D_VERTEXRGBA);
+
+    RwIm3DVertex* vert_buffer = (RwIm3DVertex*)xMEMPUSHTEMP_L(verts_size * sizeof(RwIm3DVertex), 0, 225);
+
+    RwIm3DVertex* vert = vert_buffer;
+    RwIm3DVertex* end_vert = vert + verts_size;
+    for (; vert != end_vert; color++, pos++, uv++, vert++) {
+        RwIm3DVertexSetPos(vert, pos->x, pos->y, pos->z);
+        RwIm3DVertexSetUV(vert, uv->x, uv->y);
+        if (flags & 0x10)
+            RwIm3DVertexSetRGBA(vert, color->r, color->g, color->b, color->a);
+    }
+
+    RwIm3DTransform(vert_buffer, verts_size, (RwMatrix*)mat, flags);
+    RwIm3DRenderPrimitive((RwPrimitiveType)context.format);
+    RwIm3DEnd();
+
+    xMEMPOPTEMP(vert_buffer);
+}
+
+void xIM2DRenderQuad(F32 x1, F32 y1, F32 x2, F32 y2, F32 uMax, F32 vMax, U32 alpha, U32 r, U32 g, U32 b)
+{
+    RwReal z = RwIm2DGetNearScreenZ();
+    RwReal recipCamZ = 1.0f / RwCameraGetNearClipPlane(RwCameraGetCurrentCamera());
+
+    static RwIm2DVertex vx[4];
+    
+    RwIm2DVertexSetScreenX(&vx[0], x1);
+    RwIm2DVertexSetScreenY(&vx[0], y1);
+    RwIm2DVertexSetScreenZ(&vx[0], z);
+    RwIm2DVertexSetIntRGBA(&vx[0], r, g, b, alpha);
+    RwIm2DVertexSetU(&vx[0], 0.0f, recipCamZ);
+    RwIm2DVertexSetV(&vx[0], 0.0f, recipCamZ);
+
+    RwIm2DVertexSetScreenX(&vx[1], x1);
+    RwIm2DVertexSetScreenY(&vx[1], y2);
+    RwIm2DVertexSetScreenZ(&vx[1], z);
+    RwIm2DVertexSetIntRGBA(&vx[1], r, g, b, alpha);
+    RwIm2DVertexSetU(&vx[1], 0.0f, recipCamZ);
+    RwIm2DVertexSetV(&vx[1], vMax, recipCamZ);
+
+    RwIm2DVertexSetScreenX(&vx[2], x2);
+    RwIm2DVertexSetScreenY(&vx[2], y1);
+    RwIm2DVertexSetScreenZ(&vx[2], z);
+    RwIm2DVertexSetIntRGBA(&vx[2], r, g, b, alpha);
+    RwIm2DVertexSetU(&vx[2], uMax, recipCamZ);
+    RwIm2DVertexSetV(&vx[2], 0.0f, recipCamZ);
+
+    RwIm2DVertexSetScreenX(&vx[3], x2);
+    RwIm2DVertexSetScreenY(&vx[3], y2);
+    RwIm2DVertexSetScreenZ(&vx[3], z);
+    RwIm2DVertexSetIntRGBA(&vx[3], r, g, b, alpha);
+    RwIm2DVertexSetU(&vx[3], uMax, recipCamZ);
+    RwIm2DVertexSetV(&vx[3], vMax, recipCamZ);
+
+    RwIm2DRenderPrimitive(rwPRIMTYPETRISTRIP, vx, 4);
+}

@@ -1,0 +1,78 @@
+#ifndef ZSCENE_H
+#define ZSCENE_H
+
+#include "xScene.h"
+#include "xEnt.h"
+#include "zBase.h"
+#include "zPortal.h"
+#include "zEnv.h"
+#include "xDynAsset.h"
+
+struct zSceneParameters : xDynAsset
+{
+    U32 idle03ExtraCount;
+    xAnimFile** idle03Extras;
+    U32 idle04ExtraCount;
+    xAnimFile** idle04Extras;
+    U8 bombCount;
+    U8 extraIdleDelay;
+    U8 hdrGlow;
+    U8 hdrDarken;
+    U32 uDefaultMusicHash;
+    U32 flags;
+    F32 waterTileWidth;
+    F32 lodFadeDistance;
+    F32 waterTileOffsetX;
+    F32 waterTileOffsetZ;
+    U8 numCheckpoints;
+    U8 pad1[3];
+    F32 grassDistFade;
+    F32 grassDistCull;
+    U32 piggybank;
+    U32 maxAnimationMem;
+    U32 maxArtMem;
+    U32 maxDesignMem;
+    U32 maxProgrammingMem;
+    U32 pad[3];
+};
+
+struct zScene : xScene
+{
+    zPortal* pendingPortal;
+    S32 num_base;
+    xBase** base;
+    U32 num_update_base;
+    xBase** update_base;
+    S32 baseCount[eBaseTypeCount];
+    xBase* baseList[eBaseTypeCount];
+    zEnv* zen;
+    zSceneParameters* parameters;
+    bool enableDrawing;
+};
+
+typedef xBase*(*zSceneCallback)(xBase*, zScene*, void*);
+
+extern const char** all_entity_labels;
+extern U32* all_entity_ids;
+extern U32 all_entity_count;
+extern const char** all_texture_labels;
+extern U32* all_texture_ids;
+extern U32 all_texture_count;
+#if DEBUG || RELEASE
+extern S32 g_idx_reloadTweaks;
+#endif
+extern bool gInSceneResetOrInit;
+
+bool zSceneIsLoadingPackFile();
+xBase* zSceneFindObject(U32 gameID);
+bool zSceneUpdateAsset(xBase& sceneObject, void* asset, U32 assetSize);
+const char* zSceneGetName(xBase* b);
+void zSceneForAllBase(zSceneCallback func, S32 baseType, void* data);
+U32 zScene_ScreenAdjustMode();
+void zSceneRender();
+#if DEBUG || RELEASE
+U32 zSceneGetTextureTweakMap(const char**& labels, const U32*& ids);
+U32 zSceneGetTextureIDFromRaster(RwRaster* raster);
+#endif
+
+#endif

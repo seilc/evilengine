@@ -1,0 +1,35 @@
+#ifndef ISCRFX_H
+#define ISCRFX_H
+
+#include "xVec3.h"
+
+#include <rwcore.h>
+
+struct iScrFxLensFlare
+{
+    xVec3 pos;
+    F32 dist2;
+    xVec3 at;
+    void* source;
+    F32 intensity;
+    F32 attenuatedIntensity;
+    U32 flags;
+    U32 padding;
+};
+
+void iScrFxInit();
+void iScrFxBlankScreen(U32 blank); // UNUSED
+void iScrFxBegin();
+void iScrFxEnd();
+void iCameraMotionBlurActivate(U32 activate);
+void iCameraSetBlurriness(F32 amount); // UNUSED
+inline void iScrFxCruiseDistortSetFactor(F32 factor); // UNUSED
+void iScrFxCameraCreated(RwCamera* pCamera);
+void iScrFxCameraEndScene(RwCamera* pCamera);
+S32 iScrFxMotionBlurOpen(RwCamera* camera);
+S32 iScrFxCameraDestroyed(RwCamera*);
+void iScrFxMotionBlurRender(RwCamera* camera, U32 alpha);
+void iScrFxLensFlare_Reset();
+void iScrFxLensFlare_Render(RwCamera* camera, iScrFxLensFlare* flare, void (*renderCB)(RwRaster*, RwFrame*, U8, void*));
+
+#endif

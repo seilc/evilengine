@@ -1,0 +1,146 @@
+#include "xCommon.h"
+#include "xOutputMgr.h"
+
+#include "xDebug.h"
+#include "xString.h"
+
+#include "decomp.h"
+
+#include <stdarg.h>
+#include <stdio.h>
+
+struct xOutModstat
+{
+    U32 hval;
+    char* name;
+    xOutSeverity trumpsev;
+};
+
+#define XOUT_MAX_MOD_STAT 128
+
+static xOutModstat xout_mss[XOUT_MAX_MOD_STAT];
+static S32 xout_sev = xOutSevWarn;
+
+void xOutSetSev(S32 sev)
+{
+    xout_sev = sev;
+}
+
+S32 xOutGetSev()
+{
+    return xout_sev;
+}
+
+static void xOutEnable(U32 hval, char* name, xOutSeverity trumpsev)
+{
+    U32 k = (hval % XOUT_MAX_MOD_STAT);
+    U32 ok = k;
+
+    while (xout_mss[k].hval != 0) {
+        if (hval == xout_mss[k].hval) {
+            xout_mss[k].trumpsev = trumpsev;
+            return;
+        }
+        k = (k + 1) % XOUT_MAX_MOD_STAT;
+        if (k == ok) {
+            iprintf("xOutEnable: ERROR: overrun hashtable!!\n");
+            return;
+        }
+    }
+
+    xout_mss[k].hval = hval;
+    xout_mss[k].name = name;
+    xout_mss[k].trumpsev = trumpsev;
+}
+
+void xOutEnable(char* name, xOutSeverity trumpsev)
+{
+    xASSERT_L(111, name);
+    xOutEnable(xStrHash(name), name, trumpsev);
+}
+
+S32 xOutEnabled(char* name)
+{
+    xASSERT_L(125, name);
+    return xOutEnabled(xStrHash(name));
+}
+
+S32 xOutTrumps(char* name, xOutSeverity usersev)
+{
+    xASSERT_L(132, name);
+    return xOutTrumps(xStrHash(name), usersev);
+}
+
+S32 xOutEnabled(U32 hval)
+{
+    U32 k = (hval % XOUT_MAX_MOD_STAT);
+    U32 ok = k;
+
+    while (hval != xout_mss[k].hval) {
+        k = (k + 1) % XOUT_MAX_MOD_STAT;
+        if (k == ok) {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+S32 xOutTrumps(U32 hval, xOutSeverity usersev)
+{
+    U32 k = (hval % XOUT_MAX_MOD_STAT);
+    U32 ok = k;
+
+    while (hval != xout_mss[k].hval) {
+        k = (k + 1) % XOUT_MAX_MOD_STAT;
+        if (k == ok) {
+            return FALSE;
+        }
+    }
+
+    return xout_mss[k].trumpsev >= usersev;
+}
+
+DECOMP_FORCEACTIVE(
+    "xOutputMgr: dumping list of enabled modules:\n",
+    " --hashval-- | ----------name---------- | --trumps--\n",
+    "yes",
+    "no",
+    DEBUG ? "<none>" : 0,
+    "  0x%08x   %24s   %s\n",
+    "<none>",
+    "\t\t      --empty--\n"
+)
+
+#define xOUT_VPRINT(prefix)                     \
+    char buf[1024];                             \
+    va_list args;                               \
+    va_start(args, fmt);                        \
+    vsprintf(buf, fmt, args);                   \
+    va_end(args);                               \
+    iprintf(prefix, buf)
+
+void xOutCrit(const char* fmt, ...)
+{
+    xOUT_VPRINT("[[[*** %s");
+}
+
+void xOutErr(char* name, const char* fmt, ...)
+{
+    if (!xOutTrumps(name, xOutSevErr) && (!xOutEnabled(name) || xout_sev < xOutSevErr)) return; xOUT_VPRINT("[[[ %s");
+}
+
+void xOutWarn(char* name, const char* fmt, ...)
+{
+    if (!xOutTrumps(name, xOutSevWarn) && (!xOutEnabled(name) || xout_sev < xOutSevWarn)) return; xOUT_VPRINT(">>> %s");
+}
+
+void xOutInfo(char* name, const char* fmt, ...)
+{
+    if (!xOutTrumps(name, xOutSevInfo) && (!xOutEnabled(name) || xout_sev < xOutSevInfo)) return; xOUT_VPRINT("-- %s");
+}
+
+void xOutBabble(char* name, const char* fmt, ...)
+{
+    if (!xOutTrumps(name, xOutSevBabble) && (!xOutEnabled(name) || xout_sev < xOutSevBabble)) return; xOUT_VPRINT("%s");
+}
