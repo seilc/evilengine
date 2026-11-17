@@ -3,7 +3,11 @@
 
 #include "xMath3.h"
 
+#if GAME == RAT
 #define IANIM_MAX_BONES 100
+#else
+#define IANIM_MAX_BONES 64
+#endif
 
 extern U8* g_iAnim_workBuffer;
 

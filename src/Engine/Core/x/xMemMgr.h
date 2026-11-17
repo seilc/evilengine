@@ -35,7 +35,9 @@ enum eMemMgrTag
     eMemMgrTag_Bomb,
     eMemMgrTag_Camera,
     eMemMgrTag_Cinematic,
+#if GAME == RAT
     eMemMgrTag_Components,
+#endif
     eMemMgrTag_Destructible,
     eMemMgrTag_Debug,
     eMemMgrTag_Decal,
@@ -71,8 +73,10 @@ enum eMemMgrTag
     eMemMgrTag_MovePoint,
     eMemMgrTag_NavigationMesh,
     eMemMgrTag_NPCFX,
+#if GAME == RAT
     eMemMgrTag_NPCWalls,
     eMemMgrTag_NPCGate,
+#endif
     eMemMgrTag_OneLiner,
     eMemMgrTag_OrdArrayMgr,
     eMemMgrTag_Packer,

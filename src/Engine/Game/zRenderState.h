@@ -17,8 +17,10 @@ typedef enum _SDRenderState
     eRenderStateStreak,
     eRenderStateTide,
     eRenderStateSkyDomeBack,
+#if GAME == RAT
     eRenderStateSkyDomeFlat,
     eRenderStateSkyDome3D,
+#endif
     eRenderStateEnvironment,
     eRenderStateFill,
     eRenderStateGlare,
