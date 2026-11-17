@@ -966,7 +966,9 @@ void* xMemAlloc(U32 heapID, U32 size, S32 align)
 #else
         xASSERT_FMT_L(1621, sp->used + total <= heap->size, "out of memory allocating %d bytes\n(over by %d bytes)\n", total, sp->used + total - heap->size);
 #endif
+#if GAME == RAT
         iExceptionMemCrash("xMemAlloc", size, NULL);
+#endif
         return NULL;
     }
 

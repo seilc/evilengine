@@ -60,11 +60,13 @@ void pool_list_base::reset(S32 node_size)
 
 pool_list_base::node_base* pool_list_base::insert(node_base* it)
 {
+#if GAME == RAT
     node_base* alive = head.next;
     for (; alive; alive = alive->next) {
         if (it == alive) break;
     }
     xASSERT_L(77, alive != 0);
+#endif
 
     node_base* n = alloc();
     n->next = it;

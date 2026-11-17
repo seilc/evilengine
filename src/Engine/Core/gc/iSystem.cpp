@@ -311,10 +311,18 @@ static U32 iRenderWareInit1()
     RwMemoryFunctions newMemFuncs = { iMemMgrMalloc, iMemMgrFree, iMemMgrRealloc, iMemMgrCalloc };
 
     pMemFuncs = &newMemFuncs;
+#if GAME == RAT
     if (!RwEngineInit(pMemFuncs, rwENGINEINITNOFREELISTS, 0x100000)) {
+#else
+    if (!RwEngineInit(pMemFuncs, rwENGINEINITNOFREELISTS, 0x80000)) {
+#endif
         return 1;
     }
+#if GAME == RAT
     RwResourcesSetArenaSize(0x100000);
+#else
+    RwResourcesSetArenaSize(0x80000);
+#endif
     RwDebugSetHandler(psDebugMessageHandler);
     RwDebugSendMessage_L(rwDEBUGMESSAGE, "The Incredibles: Rise of the Underminer", "Debugging Initialized", 1185);
 #ifdef RWDEBUG
@@ -440,7 +448,9 @@ void iSystemExitRWFailSafe()
     iprintf("========= Shutting down Fail Safe RenderWare =========\n");
     ret = RwEngineStop();
     ret = RwEngineClose();
+#if GAME == RAT
     _RwDlRenderMode = NULL;
+#endif
     iprintf("========= Done.\n =========");
 }
 

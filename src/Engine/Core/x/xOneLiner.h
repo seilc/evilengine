@@ -26,10 +26,10 @@ public:
     bool IsProbable() const;
     F32 CalcTimeToWait() const;
     bool PlaySoundCore();
-    bool PlaySound(); // UNUSED
-    bool PlaySoundDelayed(F32 delay); // UNUSED
-    void Init(); // UNUSED
-    void Reset(); // UNUSED
+    bool PlaySound();
+    bool PlaySoundDelayed(F32 delay);
+    void Init();
+    void Reset();
 
     bool HasValidHandle() const
     {
@@ -43,9 +43,9 @@ class xOneLinerList
     xOneLiner* mSounds;
 
 public:
-    void InitWithSounds(xOneLiner* soundList, U32 maxCheck); // UNUSED
+    void InitWithSounds(xOneLiner* soundList, U32 maxCheck);
     void SetTimers(xOneLiner* soundList, U32 maxCheck, F32); // UNUSED
-    void Reset(); // UNUSED
+    void Reset();
 
     inline bool PlaySound(U32);
     inline xSndGroupHandle GetSoundGroup(U32) const;

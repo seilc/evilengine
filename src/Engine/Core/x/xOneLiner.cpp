@@ -171,12 +171,34 @@ bool xOneLiner::PlaySoundCore()
     return false;
 }
 
+bool xOneLiner::PlaySound()
+{
+    S32 delayBits = mFlags & 0xF;
+    if (delayBits) {
+        return PlaySoundDelayed(0.1f * delayBits);
+    }
+    return PlaySoundCore();
+}
+
+bool xOneLiner::PlaySoundDelayed(F32 delay)
+{
+    if (!sDelayedSound) {
+        F32 timeNow = iTimeGetGame();
+        F32 futureTime = timeNow + delay;
+        if (futureTime >= mSoonestTimeToPlay) {
+            mSoonestTimeToPlay = futureTime;
+            sDelayedSound = this;
+            return true;
+        }
+    }
+    return false;
+}
+
 F32 xOneLiner::CalcTimeToWait() const
 {
     return mCycleTime;
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void xOneLinerList::InitWithSounds(xOneLiner* soundList, U32 maxCheck)
 {
     F32 timeNow = iTimeGetGame();
@@ -190,14 +212,12 @@ void xOneLinerList::InitWithSounds(xOneLiner* soundList, U32 maxCheck)
     xASSERT(maxCheck == 0 || maxCheck == mNumSounds);
 }
 
-// UNUSED: needed to match (code from RotU GC, Incredibles GC)
 inline void xOneLiner::Init()
 {
     mSoonestTimeToPlay = iTimeGetGame() + xrand_RandomFloatRange(0.2f, 0.5f) * CalcTimeToWait();
     mSoundGroupHdl = mAssetName[0] ? xSndMgrGetSoundGroup(xStrHash(mAssetName)) : ISND_INVALID_SND_GROUP_HANDLE;
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void xOneLinerList::Reset()
 {
     xOneLiner* sp = mSounds;
@@ -205,7 +225,6 @@ void xOneLinerList::Reset()
         sp->Reset();
 }
 
-// UNUSED: needed to match (code from RotU GC)
 inline void xOneLiner::Reset()
 {
     mFlags &= ~0x4000;
