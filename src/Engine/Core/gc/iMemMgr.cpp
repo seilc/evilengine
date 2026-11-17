@@ -525,7 +525,11 @@ void iMemInit()
     hiheap_start = (void*)((U32)hiheap_start + 150 * 1024);
     hiheap_size = (U32)hiheap_end - (U32)hiheap_start;
 
+#if GAME == RAT
     memoryManager.Init(hiheap_start, hiheap_size, 0, 1024 * 1024, 768, 768, 512, 850, false);
+#else
+    memoryManager.Init(hiheap_start, hiheap_size, 0, 512 * 1024, 768, 768, 512, 850, false);
+#endif
 
     HeapBase = (U32)memoryManager.GetHeapArenaStart();
     HeapSize = (U32)memoryManager.GetHeapArenaEnd() - (U32)memoryManager.GetHeapArenaStart();
@@ -729,7 +733,9 @@ void* iMemPushTemp(U32 size)
     void* end = xMEMADVANCE(tempStack[tempCurrent].data, tempStack[tempCurrent].size);
 
     if (end > memoryManager.GetHeapCurrentEnd()) {
+#if GAME == RAT
         iprintf("iMemPushTemp RETURNING NULL: end(%p) > memoryManager.GetHeapCurrentEnd()(%p)\n", end, memoryManager.GetHeapCurrentEnd());
+#endif
         tempStack[tempCurrent].size = 0;
         return NULL;
     }

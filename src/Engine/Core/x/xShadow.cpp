@@ -23,6 +23,9 @@
 #include "xRenderBuffer.h"
 #include "xRenderState.h"
 #include "xShadowSimple.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 #include "xstransvc.h"
 #include "zBase.h"
 #include "zEnt.h"
@@ -1370,7 +1373,11 @@ static S32 shadowCacheEntityCB(xEnt* ent, void* cbdata)
         return 1;
     }
 
+#if GAME == RAT
     if (ent->baseType == eBaseTypeNPCEntity || ent->baseType == eBaseTypeNPC) {
+#else
+    if (ent->baseType == eBaseTypeNPC) {
+#endif
         return 1;
     }
 
@@ -1952,7 +1959,11 @@ void xShadowManager_PreRender()
         sMgrList[i].preRenderedSlot = currPreRenderedSlot++;
 
         xEnt* ent = sMgrList[i].ent;
+#if GAME == RAT
         if (ent->flags & 0x20) {
+#else
+        if (ent->flags & 0x40) {
+#endif
             continue;
         }
 
@@ -2111,7 +2122,11 @@ void xShadowManager_Render()
 
     for (i = 0; i < sMgrCount; i++) {
         xEnt* ent = sMgrList[i].ent;
+#if GAME == RAT
         if (ent->flags & 0x20) {
+#else
+        if (ent->flags & 0x40) {
+#endif
             continue;
         }
 
@@ -2177,7 +2192,11 @@ void xShadowManager_Render()
                     xASSERT_L(5963, mgr->ent);
                     xASSERT_L(5964, mgr->ent->entShadow);
 
+#if GAME == RAT
                     if (mgr->ent->baseType == eBaseTypeNPCEntity) {
+#else
+                    if (mgr->ent->baseType == eBaseTypeNPC) {
+#endif
                         if (mgr->cache->entCount >= 1) {
                             const xEntShadow* npcshad = mgr->ent->entShadow;
                             if (npcshad) {
@@ -2257,7 +2276,9 @@ static void xShadow_PickByBaseType(xShadowMgr* mgr)
             }
             break;
         case eBaseTypeNPC:
+#if GAME == RAT
         case eBaseTypeNPCEntity:
+#endif
             break;
         default:
             if (!best_dyn) {
@@ -2377,7 +2398,11 @@ static void xShadow_PickByRayCast(xShadowMgr* mgr)
 
 static void xShadow_PickEntForNPC(xShadowMgr* mgr)
 {
+#if GAME == RAT
     if (mgr->ent->baseType != eBaseTypeNPCEntity) return;
+#else
+    if (mgr->ent->baseType != eBaseTypeNPC) return;
+#endif
     if (mgr->cache->entCount < 2) {
         return;
     }

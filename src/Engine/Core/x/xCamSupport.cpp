@@ -15,6 +15,9 @@
 #include "xMemMgr.h"
 #include "xQuickCull.h"
 #include "xScene.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 #include "xutil.h"
 #include "zGrid.h"
 
@@ -474,7 +477,11 @@ namespace {
 namespace losbar_tweak {
 
 xTWEAKABLE bool enable_collision = true;
+#if GAME == RAT
 xTWEAKABLE bool enable_coll_entity = true;
+#else
+xTWEAKABLE bool enable_coll_entity = false;
+#endif
 xTWEAKABLE bool render_coll_cache_ent = false;
 xTWEAKABLE bool render_coll_cache_tri = false;
 xTWEAKABLE bool render_coll_pivot = false;
