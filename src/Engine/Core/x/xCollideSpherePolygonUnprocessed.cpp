@@ -1,6 +1,10 @@
 #include "xCommon.h"
 #include "xCollideSpherePolygonUnprocessed.h"
 
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
+
 namespace xCollideSpherePolygonUnprocessed {
 static F32 normalize(xVec3& v)
 {

@@ -1,6 +1,10 @@
 #include "xCommon.h"
 #include "xCollideSpherePolygon.h"
 
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
+
 #include "decomp.h"
 
 static bool PolygonTestSphereOnPlane(const xPlane& surface, const xCollideProcessedTri::xEdge* edges, S32 num_edges, const xSweptSphere& sphere, xCollideSphereToPolygonResults& results, F32 vertical_d0);

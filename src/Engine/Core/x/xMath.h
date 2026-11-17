@@ -78,6 +78,9 @@ void xMathTest(); // UNUSED
 void xcossin3fast(F32&, F32&, F32&, F32&, F32&, F32&, F32, F32, F32); // UNUSED
 S32 xeqtwt(F32 a, F32 b, F32 x); // UNUSED
 F32 xquant(F32 x, F32 t); // UNUSED
+#if GAME != RAT
+F32 xatof(const char* x);
+#endif
 U32 xMathSolveQuadratic(F32 a, F32 b, F32 c, F32* x1, F32* x2);
 U32 xMathSolveCubic(F32 a, F32 b, F32 c, F32 d, F32* x1, F32* x2, F32* x3); // UNUSED
 F32 xMathS0(F32 t); // UNUSED

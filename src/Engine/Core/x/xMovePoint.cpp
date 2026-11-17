@@ -151,6 +151,7 @@ F32 xMovePointGetNext(const xMovePoint* m, const xMovePoint* prev, xMovePoint** 
     for (idx = 0; idx < m->asset->numPoints; idx++) {
         *next = m->nodes[idx];
         rnd -= (*next)->asset->wt;
+#if GAME == RAT
         if (!(*next)->on) {
             *next = NULL;
         }
@@ -160,6 +161,18 @@ F32 xMovePointGetNext(const xMovePoint* m, const xMovePoint* prev, xMovePoint** 
             previousOption = *next;
             if (rnd < 0) break;
         }
+#else
+        if (!(*next)->on) {
+            *next = NULL;
+        } else {
+            previousOption = *next;
+            if ((*next) == prev) {
+                *next = NULL;
+            } else if (rnd < 0) {
+                break;
+            }
+        }
+#endif
     }
 
     if (!*next) {

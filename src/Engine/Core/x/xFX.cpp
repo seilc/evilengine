@@ -13,6 +13,9 @@
 #include "xRenderBuffer.h"
 #include "xRenderState.h"
 #include "xScene.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 #include "xString.h"
 #include "xstransvc.h"
 #include "xSurface.h"

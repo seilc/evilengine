@@ -306,7 +306,11 @@ S32 xStrParseFloatList(F32* dest, const char* strbuf, S32 max)
         tmpc = *str;
         *str = '\0';
 
+#if GAME == RAT
         dest[index] = xStrParseFloat(numstart);
+#else
+        dest[index] = xatof(numstart);
+#endif
 
         if (negate) dest[index] = -dest[index];
 
