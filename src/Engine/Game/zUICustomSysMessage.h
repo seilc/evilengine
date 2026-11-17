@@ -3,8 +3,13 @@
 
 #include "zUICustom.h"
 #include "xBase.h"
+#if GAME == RAT
 #include "zUIText.h"
 #include "zUIImage.h"
+#else
+class zUIText;
+class zUIImage;
+#endif
 
 class zUICustomSysMessageManager : public zUICustom
 {
