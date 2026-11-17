@@ -1,14 +1,20 @@
 EvilEngine  
-[![Build Status]][actions]
+[![Build Status]][actions] [![Shared engine]][treemap] [![Rat-only code]][treemap] [![RotU-only code]][treemap]
 ==========
 
 [Build Status]: https://github.com/seilc/evilengine/actions/workflows/build.yml/badge.svg
 [actions]: https://github.com/seilc/evilengine/actions/workflows/build.yml
+[Shared engine]: https://img.shields.io/endpoint?url=https%3A%2F%2Fseilc.github.io%2Fevilengine%2Fshared-engine.json
+[Rat-only code]: https://img.shields.io/endpoint?url=https%3A%2F%2Fseilc.github.io%2Fevilengine%2Frat-only-code.json
+[RotU-only code]: https://img.shields.io/endpoint?url=https%3A%2F%2Fseilc.github.io%2Fevilengine%2Frotu-only-code.json
+[treemap]: https://seilc.github.io/evilengine/treemap.png
 
 A shared decompilation of Heavy Iron's EvilEngine: one source tree that builds several of its games, each version
 matching its original executable byte for byte. It started as a copy of the [Ratatouille (Jan 18, 2006
 prototype)](https://github.com/seilc/rat) decompilation; the other games' units are merged into Rat's files one by
 one. The per-game decompilations stay the ground truth: changes are ported here from them.
+
+![Progress treemap][treemap]
 
 This repository does **not** contain any game assets or assembly whatsoever. Existing copies of the games are
 required.

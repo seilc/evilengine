@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw a treemap of every game's Game units as a PNG, for the Discord progress post.
+"""Draw a treemap of every game's Game units as a PNG, for the Discord progress post and the README.
 
 Usage: treemap.py CUR_DIR OUT.png [PREV_DIR]
 One box per file over all games (the units of each game's first version, Rat's DEBUG, so units only Rat's other builds

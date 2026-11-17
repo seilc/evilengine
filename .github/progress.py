@@ -2,6 +2,7 @@
 """Print a Discord message (JSON payload) with per-version Game progress from objdiff reports.
 
 Usage: progress.py CUR_DIR [PREV_DIR]
+       progress.py --badges OUT_DIR CUR_DIR
 A line for the shared engine (files two or more games have) and one for each game's own code (fuzzy-matched code,
 objdiff's fuzzy_match_percent, over each game's first version as treemap.py draws them, with its change since
 PREV_DIR when it moved, a 🎉 when it passed a multiple of 10% since PREV_DIR, and its matched and total files),
@@ -15,6 +16,9 @@ that fits in MAX_CONTENT, with a count of the files left out.
 Optional environment, for the line naming who pushed what: PUSHER (GitHub login), REPO (owner/name), HEAD_SHA,
 PREV_SHA, COMMITS (the number of commits pushed).
 Prints nothing when nothing changed since PREV_DIR.
+With --badges, writes instead a shields.io endpoint badge for each of those lines (shared engine, each game's own
+code), OUT_DIR/<line name>.json (`shared-engine.json`, `rat-only-code.json`), for the README (published to GitHub
+Pages with treemap.py's image).
 Each directory holds <VERSION>_report/report.json, as downloaded from the Build workflow's artifacts.
 """
 import json
@@ -31,6 +35,7 @@ CATEGORY = "game"
 ABBREVS = {"RAT_DEBUG": "D", "RAT_RELEASE": "R", "RAT_MASTERDEBUG": "MD", "RAT_MASTER": "M"}
 MAX_CONTENT = 1000  # kept short (Discord's own limit is 2000)
 COLLAPSE = 3  # more functions of one file now at 100.00% than this become one count line
+BADGE_COLORS = ("3987e5", "1fa84f")  # treemap.py's PARTIAL and MATCHED
 
 
 def func_name(name):
@@ -155,8 +160,22 @@ def contributor():
     return f"[{pusher}](<https://github.com/{pusher}>) just contributed the following in {ref}:"
 
 
+def badges(out_dir, cur_dir):
+    """Write OUT_DIR/<line name>.json for each line of parts(): the percentage the post shows, labelled with the
+    line's name."""
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    for name, cur in parts(cur_dir).items():
+        cur_pct = f"{pct(cur, 'fuzzy_code', 'total_code'):.2f}"
+        badge = {"schemaVersion": 1, "label": name, "message": f"{cur_pct}%",
+                 "color": BADGE_COLORS[cur_pct == "100.00"]}
+        (Path(out_dir) / f"{name.lower().replace(' ', '-')}.json").write_text(json.dumps(badge) + "\n")
+
+
 def main():
     args = sys.argv[1:]
+    if args[0] == "--badges":
+        badges(args[1], args[2])
+        return
     cur_dir, prev_dir = args[0], (args[1] if len(args) > 1 else None)
     rows = []
     changes = {}
