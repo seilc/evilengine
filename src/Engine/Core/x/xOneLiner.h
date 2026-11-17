@@ -35,6 +35,11 @@ public:
     {
         return (mSoundGroupHdl != ISND_INVALID_SND_GROUP_HANDLE);
     }
+
+    xSndGroupHandle GetSoundGroup() const
+    {
+        return mSoundGroupHdl;
+    }
 };
 
 class xOneLinerList
@@ -47,8 +52,22 @@ public:
     void SetTimers(xOneLiner* soundList, U32 maxCheck, F32); // UNUSED
     void Reset();
 
-    inline bool PlaySound(U32);
-    inline xSndGroupHandle GetSoundGroup(U32) const;
+    bool PlaySound(U32 index)
+    {
+        if (index < mNumSounds) {
+            return mSounds[index].PlaySound();
+        }
+        return false;
+    }
+
+    xSndGroupHandle GetSoundGroup(U32 index) const
+    {
+        if (index >= mNumSounds) {
+            return ISND_INVALID_SND_GROUP_HANDLE;
+        }
+        return mSounds[index].GetSoundGroup();
+    }
+
     inline void PlaySoundDelayed(U32, F32);
 };
 

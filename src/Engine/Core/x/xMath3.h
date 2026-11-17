@@ -130,7 +130,7 @@ public:
     F32 height;
     F32 angle;
 
-    U8 Inside(const xVec3& pos, F32 radius, F32* perpCenterDist) const; // UNUSED
+    U8 Inside(const xVec3& pos, F32 radius, F32* perpCenterDist) const;
 };
 
 class xPlane
@@ -296,6 +296,13 @@ inline void xMat3x3MulScaleC(xMat3x3* o, const xMat3x3* m, F32 x, F32 y, F32 z)
     o->at.assign(m->at.x * z, m->at.y * z, m->at.z * z);
 }
 
+inline void xMat3x3MulScaleC(xMat3x3& m, F32 scale)
+{
+    xVec3ScaleC(m.right, scale);
+    xVec3ScaleC(m.up, scale);
+    xVec3ScaleC(m.at, scale);
+}
+
 inline void xMat3x3MulScale(xMat3x3* o, const xMat3x3* m, xVec3* s)
 {
     xASSERT_L(3021, (o != 0) && (m != 0) && (s != 0));
@@ -339,7 +346,7 @@ inline void xMat4x3Copy(xMat4x3* o, const xMat4x3* m)
 void xMat4x3Orthonormalize(xMat4x3* o, const xMat4x3* m); // UNUSED
 void xMat4x3Rot(xMat4x3* m, const xVec3* a, F32 t, const xVec3* p);
 void xMat4x3RotX(xMat4x3* m, F32 t, const xVec3* p); // UNUSED
-void xMat4x3RotY(xMat4x3* m, F32 t, const xVec3* p); // UNUSED
+void xMat4x3RotY(xMat4x3* m, F32 t, const xVec3* p);
 void xMat4x3RotZ(xMat4x3* m, F32 t, const xVec3* p); // UNUSED
 void xMat4x3Mul(xMat4x3* o, const xMat4x3* a, const xMat4x3* b);
 void xMat4x3LMul3x3(xMat4x3* o, const xMat4x3* m, const xMat3x3* m3x3); // UNUSED
@@ -430,7 +437,7 @@ do {                                            \
     xVec3SMul((o), (o), 0.5f);                  \
 } while (0)
 
-inline void xRay3Eval(xVec3* o, const xRay3* r, F32 t); // UNUSED
+inline void xRay3Eval(xVec3* o, const xRay3* r, F32 t);
 
 #define xLine3FromRay(ln, r)                                                                                                                        \
 do {                                                                                                                                                \

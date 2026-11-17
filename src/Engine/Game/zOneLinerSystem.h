@@ -3,13 +3,17 @@
 
 struct zPlayer;
 
-// Empty for now - Not found in DWARF
 enum zOneLinerTypes
 {
+#if GAME == ROTU
+    zOLT_FreezeObject = 49,
+    zOLT_ShatterObject = 51,
+    zOLT_Total = 55
+#endif
 };
 
 void zOneLinerSystemSetup();
 void zOneLinerSystemReset();
-void zOneLinerSystemPlay(zPlayer*, zOneLinerTypes);
+void zOneLinerSystemPlay(zPlayer* player, zOneLinerTypes type);
 
 #endif
