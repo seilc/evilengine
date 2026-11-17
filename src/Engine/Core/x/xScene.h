@@ -105,7 +105,7 @@ void xRayHitsSceneFlags(xScene* sc, const xRay3* r, xCollis* coll, U8 collType, 
 #else
 void xRayHitsSceneFlags(xScene* sc, xRay3* r, xCollis* coll, U8 collType, U8 chk);
 #endif
-void xSphereHitsScene(xScene* sc, const xSphere* sphere, xCollis* coll, U8 collType, U8 chk); // UNUSED
+void xSphereHitsScene(xScene* sc, const xSphere* sphere, xCollis* coll, U8 collType, U8 chk);
 U32 xSceneNearestFloorPoly(xScene* sc, xNearFloorPoly* nfpoly, U8 collType, U8 chk);
 
 #endif

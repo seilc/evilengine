@@ -77,7 +77,11 @@ struct xJSPHeader
 typedef S32(*xJSPLeafNodeCallback)(xJSPHeader*, xJSPNodeTreeLeaf*, RwBBox*, void*);
 
 xJSPHeader* xJSP_StreamRead(RwStream* stream, U32); // UNUSED
+#if GAME == RAT
 U32 get_matid(const xJSPHeader* jsp, U32 old_mat_id, U32 jspAssetID);
+#else
+U32 get_matid(xJSPHeader* jsp, U32 old_mat_id, U32 jspAssetID);
+#endif
 void xJSP_MultiStreamRead(void* data, U32 size, xJSPHeader** jsp, U32 assetID);
 void xJSP_Destroy(xJSPHeader* jsp);
 xJSPNodeTree* xJSPNodeTreeBuild(xJSPHeader* jsp);

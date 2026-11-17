@@ -70,7 +70,9 @@ void xSceneInit(xScene* sc, U16 numTrigs, U16 numSpecialTrigs, U16 numStats, U16
 
     xAnimPoolInit(&sc->mempool, 50, 1, 1, 4);
 
+#if GAME == RAT
     xModelPoolInit(2, 100);
+#endif
 
     xModelPoolInit(49, 64);
     xModelPoolInit(150, 8);
@@ -693,7 +695,6 @@ namespace {
         }
     };
 
-    // UNUSED: needed to match (code from RotU GC)
     struct cbSphereHitsEnt
     {
         const xSphere* sphere;
@@ -760,7 +761,11 @@ namespace {
     };
 }
 
+#if GAME == RAT
 void xRayHitsSceneFlags(xScene* sc, const xRay3* r, xCollis* coll, U8 collType, U8 chk)
+#else
+void xRayHitsSceneFlags(xScene* sc, xRay3* r, xCollis* coll, U8 collType, U8 chk)
+#endif
 {
     xASSERT_FMT_L(1277, r->max_t <= 10000.0f, "Due to floating point precision, using a value that is very large for maxT can get incorrect collisions");
 
@@ -798,7 +803,6 @@ void xRayHitsSceneFlags(xScene* sc, const xRay3* r, xCollis* coll, U8 collType, 
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void xSphereHitsScene(xScene* sc, const xSphere* sphere, xCollis* coll, U8 collType, U8 chk)
 {
     coll->dist = 1e38f;
@@ -1072,7 +1076,11 @@ static S32 gridNearestFloorCB(xEnt* ent, void* cbdata)
     }
 
     zSurfaceProps* props = (zSurfaceProps*)ent->model->Surf->moprops;
+#if GAME == RAT
     bool flag = (props->asset->phys_flags & 0x80) != 0;
+#else
+    bool flag = (props->asset->phys_flags & 0x40) != 0;
+#endif
 
     if (!flag) {
         return TRUE;
