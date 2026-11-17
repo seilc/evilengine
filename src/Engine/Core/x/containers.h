@@ -133,6 +133,7 @@ public:
     iterator begin() const { return create_iterator(_first); }
     iterator end() const { return create_iterator(mod_max_size(_first + _size)); }
     T& front() { xASSERT_L(210, !empty()); return *begin(); }
+    T& operator[](int i) { return _buffer[mod_max_size(_first + i)]; }
 
     void erase(const iterator& first, const iterator& last)
     {

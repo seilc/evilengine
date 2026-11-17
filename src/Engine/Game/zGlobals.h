@@ -4,7 +4,9 @@
 #include "xGlobals.h"
 #include "xSndMgr.h"
 #include "zBrainTypes.h"
+#if GAME == RAT
 #include "zMiniGameManager.h"
+#endif
 
 struct zGlobalSettings
 {
@@ -44,7 +46,11 @@ struct zGlobals : xGlobals
 {
     zGlobalSettings settings;
     zCheckPoint checkPoint;
+#if GAME == RAT
     U32 playerTag[9];
+#else
+    U32 playerTag[2];
+#endif
     bool playerLoaded;
     bool invertJoystick;
     F32 timeMultiplier;
@@ -66,7 +72,9 @@ struct zGlobals : xGlobals
     S32 cameraAIFocus;
     eBrainType firstPlayerBrainID;
     zEconomics* economics;
+#if GAME == RAT
     zMiniGameManager* mgManager;
+#endif
     bool fmvJustFinished;
 #if DEBUG || RELEASE
     U32 initialRemyPowerUp[5];

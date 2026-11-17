@@ -684,6 +684,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xIni.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xJaw.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xJSP.cpp"),
+            GameObject(Matching, "Engine/Core/x/xLaserBolt.cpp", sym="on"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xLight.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xLightEffect.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xLightKit.cpp"),

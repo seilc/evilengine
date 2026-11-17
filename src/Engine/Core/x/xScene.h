@@ -100,7 +100,11 @@ void xRayHitsCameraEnt(xScene*, xRay3* r, xCollis*, xQCData* qcr, xEnt* ent); //
 void xRayHitsCameraScene(xScene* sc, xRay3* r, xRayCameraCallback cameraFunc); // UNUSED
 void xRayHitsEntFlags(xScene*, xRay3* r, xCollis* coll, xQCData* qcr, xEnt* ent, U8 collType);
 void xRayHitsEntFlagsCB(xScene* sc, xRay3* r, xCollis* coll, xQCData* qcr, xEnt* ent); // UNUSED
+#if GAME == RAT
 void xRayHitsSceneFlags(xScene* sc, const xRay3* r, xCollis* coll, U8 collType, U8 chk);
+#else
+void xRayHitsSceneFlags(xScene* sc, xRay3* r, xCollis* coll, U8 collType, U8 chk);
+#endif
 void xSphereHitsScene(xScene* sc, const xSphere* sphere, xCollis* coll, U8 collType, U8 chk); // UNUSED
 U32 xSceneNearestFloorPoly(xScene* sc, xNearFloorPoly* nfpoly, U8 collType, U8 chk);
 
