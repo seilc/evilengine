@@ -119,7 +119,11 @@ void zEntEvent(xBase* from, U32 fromEvent, xBase* to, U32 toEvent, const F32* to
             if (toEvent != idx->srcEvent) continue;
             if (idx->chkAssetID && (!from || idx->chkAssetID != from->id)) continue;
 
+#if GAME == RAT
             if (idx->dstAssetID == HASH_THIS_PLYR) {
+#else
+            if (idx->dstAssetID == xStrHash("THIS_PLYR")) {
+#endif
                 sendTo = zSceneFindObject(gThisPlayer);
             } else {
                 sendTo = zSceneFindObject(idx->dstAssetID);
@@ -128,7 +132,11 @@ void zEntEvent(xBase* from, U32 fromEvent, xBase* to, U32 toEvent, const F32* to
 
             xBase* b = NULL;
             if (idx->paramWidgetAssetID) {
+#if GAME == RAT
                 if (idx->paramWidgetAssetID == HASH_THIS_CAM_TARGET) {
+#else
+                if (idx->paramWidgetAssetID == xStrHash("THIS_CAM_TARGET")) {
+#endif
                     b = zSceneFindObject(gThisCameraTarget);
                 } else {
                     b = zSceneFindObject(idx->paramWidgetAssetID);

@@ -3,6 +3,9 @@
 
 #include "zFXShockwave.h"
 #include "zFXScreenDecal.h"
+#if GAME == ROTU
+#include "zFXScreenCrack.h"
+#endif
 #include "zFXGoo.h"
 #include "zNPCProjectileGrubFX.h"
 #include "zParSysSnowsplosion.h"
@@ -41,6 +44,9 @@ void zFX_SceneEnter(RpWorld* world)
     zFXShockwaveSceneEnter(6);
     zParSysSnowsplosionSceneSetup();
     zFXScreenDecalSceneEnter();
+#if GAME == ROTU
+    zFXScreenCrack::Init();
+#endif
     zNPCProjectileGrubFX_SceneSetup();
 }
 

@@ -165,6 +165,7 @@ enum en_ZBASETYPE
     eBaseTypeFrozenProjectile,
     eBaseTypeInterestPointer,
     eBaseTypeCheckpoint,
+#if GAME == RAT
     eBaseTypeTightrope,
     eBaseTypePoleSwing,
     eBaseTypeSpringboard,
@@ -200,6 +201,9 @@ enum en_ZBASETYPE
     eBaseTypeRaftTrack,
     eBaseTypeNPCGate,
     eBaseTypePourStream,
+#else
+    eBaseTypeBossBrain,
+#endif
     eBaseTypeCount
 };
 

@@ -193,7 +193,11 @@ static void xSoundFXPlay(xSoundFX* t)
             sndFlags |= 0x800;
             t->sndHandle = xSndMgrPlay(t->asset->soundAsset, sndFlags, xEntGetPos(ent), NULL, ent, NULL, NULL);
         }
+#if GAME == RAT
     } else if (t->asset->soundAsset != ISND_INVALID_SND_GROUP_HANDLE) {
+#else
+    } else {
+#endif
         if (!zGameIsPaused() || !xSndMgrIsDialogPlaying() || xSndMgr_GetGroup(t->asset->soundAsset)->header.eSoundCategory != xSndCat_DIALOG) {
             if (!zGameIsPaused() || !xSndMgrIsStream(t->asset->soundAsset) || xSoundFXEnsureFreeAudioStream(true)) {
                 t->sndHandle = xSndMgrPlay(t->asset->soundAsset, sndFlags, &t->asset->pos, NULL, NULL, NULL, NULL);

@@ -2,6 +2,9 @@
 #include "iAsync.h"
 
 #include "iSystem.h"
+#if GAME != RAT
+#include "xPad.h"
+#endif
 #include "xutil.h"
 
 #include <rwcore.h>
@@ -56,6 +59,9 @@ void iAsyncTerminate()
 void iAsyncBeginUpdate()
 {
     OSCancelAlarms(IDTAG('A','S','Y','N'));
+#if GAME != RAT
+    xPadUpdate(0, 0.0f);
+#endif
 }
 
 void iAsyncEndUpdate()
