@@ -255,7 +255,11 @@ xJSPHeader* xJSP_StreamRead(RwStream* stream, U32)
     return hdr;
 }
 
+#if GAME == RAT
 U32 get_matid(const xJSPHeader* jsp, U32 old_mat_id, U32 jspAssetID)
+#else
+U32 get_matid(xJSPHeader* jsp, U32 old_mat_id, U32 jspAssetID)
+#endif
 {
     char num[100];
     sprintf(num, "%d", old_mat_id);
