@@ -20,7 +20,6 @@
 #include "zScene.h"
 #include "zShrapnel.h"
 
-// UNUSED: needed to match (code from RotU GC)
 namespace {
 const xFXRibbon::curve_node RIBBON_CURVE[] = {
     { 0.0f, { 0xFF, 0xFF, 0xFF, 0x20 }, 1.0f },
@@ -39,7 +38,6 @@ void cbModelChange(const tweak_info& info);
 xLightKit* GetGlobalLightKit();
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerParticle::Render()
 {
     if (alive) {
@@ -47,7 +45,6 @@ void zShowerParticle::Render()
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerParticle::Setup(const ConfigType* cfg, xLightKit* lightKit)
 {
     config = cfg;
@@ -70,7 +67,6 @@ void zShowerParticle::Setup(const ConfigType* cfg, xLightKit* lightKit)
     ribbon = NULL;
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerParticle::Exit()
 {
     if (ribbon) {
@@ -82,7 +78,6 @@ void zShowerParticle::Exit()
 
 typedef pool_list<zShowerParticle> particle_list;
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerParticle::Update(particle_list& list, xEnt* owner, zShowerCBInterface* collideCallback, F32 dt)
 {
     if (time >= TIMEOUT) {
@@ -152,7 +147,6 @@ void zShowerParticle::Update(particle_list& list, xEnt* owner, zShowerCBInterfac
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 #if DEBUG || RELEASE
 void zShowerParticle::Start(const xVec3& pos, F32 fallSpeed, const xFXRibbon* tweakRibbon)
 #else
@@ -171,7 +165,6 @@ void zShowerParticle::Start(const xVec3& pos, F32 fallSpeed)
 #endif
 }
 
-// UNUSED: needed to match (code from RotU GC)
 #if DEBUG || RELEASE
 void zShowerSystem::Setup(xEnt* moveOwner, ConfigType* cfg)
 #else
@@ -199,7 +192,6 @@ void zShowerSystem::Setup(xEnt* moveOwner, const ConfigType* cfg)
     Reset();
 }
 
-// UNUSED: needed to match (code from RotU GC)
 namespace {
 xLightKit* GetGlobalLightKit()
 {
@@ -212,7 +204,6 @@ xLightKit* GetGlobalLightKit()
 }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerSystem::Reset()
 {
     particleList.clear();
@@ -220,7 +211,6 @@ void zShowerSystem::Reset()
     effectTimer = HUGE;
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerSystem::Start(const xVec3& pos, zShowerCBInterface* collideCB)
 {
     collideCallback = collideCB;
@@ -229,7 +219,6 @@ void zShowerSystem::Start(const xVec3& pos, zShowerCBInterface* collideCB)
     ResetSpawnTimer();
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerSystem::ResetSpawnTimer()
 {
     if (effectTimer <= config->endStormTime) {
@@ -240,7 +229,6 @@ void zShowerSystem::ResetSpawnTimer()
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerSystem::Update(F32 dt)
 {
     if (config->stormDamageRadius > 0.0f && effectTimer >= config->endStormTime && effectTimer - dt < config->endStormTime) {
@@ -281,7 +269,6 @@ void zShowerSystem::Update(F32 dt)
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerSystem::Render()
 {
     particle_list::node_type* itr = particleList.begin();
@@ -291,7 +278,6 @@ void zShowerSystem::Render()
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void zShowerSystem::Exit()
 {
     particle_list::node_type* currentNode = particleList.get_buffer();
