@@ -773,7 +773,7 @@ config.libs = [
             GameObject(Matching, "Engine/Game/rt/zNPCStates.cpp", sym="on"),
             GameObject(Matching, "Engine/Game/rt/zNPCTypesIN2.cpp", sym="on"),
             GameObject(Matching, "Engine/Game/rt/zSweptCircle.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zActionLine.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zActionLine.cpp"),
             GameObject(NonMatching, "Engine/Game/zAnimCache.cpp"),
             GameObject(NonMatching, "Engine/Game/zAnimCustom.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zAnimList.cpp"),
