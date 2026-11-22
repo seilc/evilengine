@@ -804,7 +804,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zCineFX.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCineFXShared.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCineFXTableSceneUT11.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zCineFXTableTest.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCineFXTableTest.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCollGeom.cpp"),
             GameObject(NonMatching, "Engine/Game/zCombat.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCombatAttack.cpp", sym="on"),
