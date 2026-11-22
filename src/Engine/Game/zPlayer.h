@@ -134,6 +134,8 @@ struct zPlayer : zEnt
     virtual bool IsFalling();
 #endif
 
+    zPlayerInput& GetPlayerInput() { return playerInput; }
+
     bool CollisionOn() const { return Get_collisionOn(); }
 
     virtual bool FindShortestCollision(xSweptSphere& sws, U32& collisionFlags, S32 penby, bool);

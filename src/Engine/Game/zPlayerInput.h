@@ -17,11 +17,20 @@ public:
 
     struct Buttons
     {
+#if DEBUG || GAME == ROTU
         bool jump;
         bool actionMove;
         bool contextMove;
         bool otherMove;
+#else
+        bool jump : 1;
+        bool actionMove : 1;
+        bool contextMove : 1;
+        bool otherMove : 1;
+#endif
     };
+
+    void SetPad(zPad* pad);
 
     AnalogStick stick1;
     AnalogStick stick2;
