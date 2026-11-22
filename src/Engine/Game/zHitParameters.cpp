@@ -68,6 +68,17 @@ U32 zHitSourceCCs[zHS_COUNT] = {
     'DR\0\0'
 };
 
+U32 zHitTargetCCs[zHT_COUNT] = {
+    '\0\0G\0',
+    '\0\0F\0',
+    '\0\0B\0',
+    '\0\0L\0',
+    '\0\0R\0',
+    '\0\0E\0',
+    '\0\0V\0',
+    '\0\0C\0'
+};
+
 S32 getSourceCCIdx(U32 value)
 {
     for (S32 i = 0; i < zHS_COUNT; i++) {

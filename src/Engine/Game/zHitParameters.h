@@ -70,6 +70,9 @@ enum zHitSource
     zHS_PUNCH_FRO_4_LEVEL3,
     zHS_ENEMY_DAMAGE,
     zHS_ENEMY_FLYBACK,
+#if GAME == ROTU
+    zHS_FREEZE,
+#endif
     zHS_COUNT,
     zHS_FORCE_INT = -1
 };
