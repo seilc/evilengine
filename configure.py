@@ -1085,7 +1085,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zWater.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zWaterhose.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zWireFrameAsset.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zZipLine.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zZipLine.cpp"),
         ],
     },
     {
