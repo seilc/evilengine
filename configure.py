@@ -996,7 +996,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zPlayerActionWallRun.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPlayerBase.cpp"),
             GameObject(NonMatching, "Engine/Game/zPlayerConstrainer.cpp", sym="on"),
-            GameObject(MatchingFor("RAT"), "Engine/Game/zPlayerContainer.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zPlayerContainer.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPlayerInput.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPlayerLocationPlatform.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPlayerOneLinerData.cpp", sym="on"),

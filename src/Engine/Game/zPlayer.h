@@ -13,6 +13,9 @@
 
 struct zScene;
 struct zSlideCam;
+#if GAME == ROTU
+struct zJump;
+#endif
 struct xModelAssetParam;
 class zInteraction;
 struct xSweptSphere;
@@ -40,7 +43,9 @@ struct zPlayerCheckPoint
 struct zPlayer : zEnt
 {
 public:
+#if GAME == RAT
     zPlayerActionManager actionManager;
+#endif
     S32 index;
     
 public:
@@ -57,21 +62,35 @@ public:
     virtual bool AllowInteraction(zInteraction*);
     virtual void AttackHit(bool);
     virtual void BeginUpdate(F32 dt);
+#if GAME == RAT
     virtual void DefaultBeginUpdate(F32 dt);
+#endif
     virtual void Update(F32 dt);
+#if GAME == RAT
     virtual void DefaultUpdate(F32 dt);
+#endif
     virtual void EndUpdate(F32 dt);
+#if GAME == RAT
     virtual void DefaultEndUpdate(F32 dt);
+#endif
     virtual void Move(xScene* s, F32 dt, xEntFrame* frame);
+#if GAME == RAT
     virtual void DefaultMove(xScene* s, F32 dt, xEntFrame* frame);
+#endif
     virtual void Render();
     virtual bool WasRendered() const;
     virtual void HandleEvent(xBase* from, U32 toEvent, const F32* toParam, xBase* toParamWidget, U32 toParamWidgetID);
     virtual void Reset();
     virtual bool IsDead() const;
     virtual void Exit();
+#if GAME == ROTU
+    virtual bool IsDoingNuke() const;
+#endif
     virtual void Save(xSerial* serial);
     virtual void Load(xSerial* serial);
+#if GAME == ROTU
+    virtual void BeforeAnimMatrices(xAnimPlay*, xQuat*, xVec3*, S32);
+#endif
     virtual bool Damage(const zCombatDamageInfo& damageInfo);
     virtual xEnt* GetCarriedEntity();
     virtual S32* GetHeadBones();
@@ -83,6 +102,10 @@ public:
     virtual void StoreCheckPoint(const zPlayerCheckPoint& theCheckPoint);
     virtual void SetCamera();
     virtual void RenderEffects();
+#if GAME == ROTU
+    virtual void SetJump(zJump* new_jump);
+    virtual U32 JumpCheck() const;
+#endif
 
 #if DEBUG || RELEASE
     virtual void SetupTweaks();
@@ -93,7 +116,11 @@ public:
     virtual bool NeedsHealth() const;
     virtual const xVec3& GetFloorNormal() const;
 
+#if GAME == RAT
     virtual bool IsFloorColliding() const { return Get_floor_collision() && CollisionOn(); }
+#else
+    bool IsFloorColliding() const { return Get_floor_collision() && CollisionOn(); }
+#endif
 
     virtual const xVec3* GetFloorPosition() const;
     virtual const char** GetBoneNames() const;
@@ -103,6 +130,11 @@ public:
     virtual void GiveIncrediPower(S16, bool);
     virtual void TakeIncrediPower(F32);
     virtual bool IsSwimming() const;
+#if GAME == ROTU
+    virtual bool IsPunching();
+    virtual bool IsIdle();
+    virtual bool IsFalling();
+#endif
 
     bool CollisionOn() const { return Get_collisionOn(); }
 
@@ -111,18 +143,30 @@ public:
     virtual xVec3 get_target();
     virtual F32 GetScreenFadeTime();
     virtual F32 StartScreenFadeAt();
+#if GAME == RAT
     virtual F32 PredictY(F32 time) const;
+#endif
 
     S32 GetCollisionSpheres(const xSphere** sphereArray);
 
     virtual bool IsInteractioning();
 
-    bool CanSayOneLiner(); // UNUSED
+    bool CanSayOneLiner();
+#if GAME == ROTU
+    bool IsUsingLeftHUD();
+#endif
 
+#if GAME == RAT
     bool Get_humanPlayer() const
     {
         return (zPlayerFlags >> 18) & 0x1;
     }
+#else
+    bool Get_humanPlayer() const
+    {
+        return (zPlayerFlags >> 19) & 0x1;
+    }
+#endif
 
     bool Get_floor_collision() const
     {
@@ -136,13 +180,19 @@ public:
 
     virtual void SetEnemyIsNear(bool isit);
     virtual void EnemyKilled(zNPC::zNPCCommon* npc);
+#if GAME == RAT
     virtual bool IsJumping() const = 0;
+#endif
     virtual void ParseIni();
     virtual void AddStates(xAnimTable* table);
     virtual void AddTransitions(xAnimTable*);
+#if GAME == RAT
     virtual void InitActions() = 0;
+#endif
     virtual bool CollisionResponse(const xVec3& currentDir, const SphereCollisionResults& sceneCollide, xVec3& responseDpos);
+#if GAME == RAT
     virtual bool DefaultCollisionResponse(const xVec3& current_dir, const SphereCollisionResults& scene_collide, xVec3& response_dpos);
+#endif
     virtual void RegisterCollision(const SphereCollisionResults& sceneCollide);
     virtual bool StayOnGround();
     virtual bool CollideWithNPC();
@@ -222,11 +272,17 @@ protected:
     S32 enemyKilledCombo;
 
 private:
+#if GAME == ROTU
+    U8 unk908[0x2D0];
+#endif
     F32 depenetration_velocity;
     xEntShadow entShadow_embedded;
     xShadowSimpleCache simpShadow_embedded;
     U32 loaded_assetid;
     xEntDrive drv;
+#if GAME == ROTU
+    U8 unkD70[0x50];
+#endif
     U16 parametersSize;
     xModelAssetParam* parameters;
     xEnt* reticleTarget;
