@@ -804,7 +804,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zCombat.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCombatAttack.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCombatEffects.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zCombatSystem.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCombatSystem.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCombo.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCommonPlayer.cpp"),
             GameObject(NonMatching, "Engine/Game/zCommonPlayerActionPushPull.cpp", sym="on"),

@@ -2,11 +2,11 @@
 #define XHIERARCHYBOUND_H
 
 #include "xMath3.h"
-#include "xCollideSweptSphere.h"
 
 struct xBound;
 struct xSphereList;
 struct xSphereListInitData;
+struct xSweptSphere;
 
 struct xHierarchTweakInfo
 {
@@ -44,7 +44,11 @@ struct xHierarchyBoundInitData
 
 S32 xHierarchyBoundSetup(xHierarchyBound* bound, const xHierarchyBoundInitData* init, U32 extraBounds);
 S32 xHierarchyBoundSetup(xHierarchyBound* bound, U32 nodesNumber);
+#if GAME == RAT
 void xHierarchyBoundInit(xHierarchyBound* bound, const xHierarchyBoundInitData* init, F32 masterRadius, F32 scale);
+#else
+void xHierarchyBoundInit(xHierarchyBound* bound, const xHierarchyBoundInitData* init, F32 masterRadius, U32 extraBounds, F32 scale);
+#endif
 void xHierarchyBoundDraw(const xHierarchyBound* bound, U8 mR, U8 mG, U8 mB, U8 mA, U8 sR, U8 sG, U8 sB, U8 sA, S8 hilight, U8 hR, U8 hG, U8 hB, U8 hA);
 void xHierarchyBoundUpdate(xHierarchyBound* bound, const RwMatrix* mats); // UNUSED
 bool xHierarchyBoundTest(const xHierarchyBound* bound, const xSphere* sphere, U16* boundUserData, xIsect* isect, S8* subsphere); // UNUSED
