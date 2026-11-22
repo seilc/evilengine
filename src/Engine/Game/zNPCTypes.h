@@ -8,6 +8,7 @@ enum eNPCType
     eNPCType_None = -1,
     eNPCType_Unknown = -1,
     eNPCType_First = 0,
+#if GAME == RAT
     eNPCType_SwarmMember = 0,
     eNPCType_Swarm_Owl,
     eNPCType_Swarm_Bug,
@@ -24,6 +25,20 @@ enum eNPCType
     eNPCType_ContextSensitive,
     eNPCType_AnimViewer,
     eNPCType_InstaKill,
+#else
+    eNPCType_Common = 0,
+    eNPCType_Humanoid,
+    eNPCType_Rat,
+    eNPCType_Chicken,
+    eNPCType_Driller,
+    eNPCType_Shooter,
+    eNPCType_Bomber,
+    eNPCType_RobotTank,
+    eNPCType_Enforcer,
+    eNPCType_Scientist,
+    eNPCType_BossUnderminerDrill,
+    eNPCType_BossUnderminerUM,
+#endif
     eNPCTypeCount,
     eNPCTypeForceInt = FORCEENUMSIZEINT
 };

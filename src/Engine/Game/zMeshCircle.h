@@ -23,9 +23,15 @@ public:
 
     bool IsActive(U32 npcType) const
     {
+#if GAME == RAT
         if (npcType >= eNPCType_CMG_PourNSwirl) {
             return false;
         }
+#else
+        if (npcType >= eNPCType_BossUnderminerUM) {
+            return false;
+        }
+#endif
 
         return (npcActiveFlags & (1 << npcType)) != 0;
     }

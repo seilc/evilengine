@@ -362,7 +362,11 @@ void xEntBoulder_Update(xEntBoulder* ent, xScene* sc, F32 dt)
         }
 
         for (i = ent->collis->npc_sidx; i < ent->collis->npc_eidx; i++) {
+#if GAME == RAT
             zNPC::zNPCBaseIN2* npc = (zNPC::zNPCBaseIN2*)ent->collis->colls[i].optr;
+#else
+            zNPC::zNPCBase* npc = (zNPC::zNPCBase*)ent->collis->colls[i].optr;
+#endif
             if (ent->basset->flags & 0x1) {
                 xVec3AddTo(&depen, &ent->collis->colls[i].depen);
             } else {
