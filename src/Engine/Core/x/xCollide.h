@@ -5,7 +5,9 @@
 
 struct xEnt;
 struct xEnv;
+#if GAME == RAT
 struct xJSPHeader;
+#endif
 struct xQCData;
 struct xScene;
 
@@ -122,14 +124,18 @@ void xBoxForModelLocal(xBox& o, const xModelInstance* m, bool childModels);
 void xSphereForModel(xSphere& o, const xModelInstance* model, bool childModels);
 U32 xRayHitsModelSingle(const xRay3* r, const xModelInstance* m, xCollis* coll);
 U32 xRayHitsModel(const xRay3* r, const xModelInstance* m, xCollis* coll);
+#if GAME == RAT
 U32 xRayHitsJSP(const xRay3* r, const xJSPHeader* jsp, xCollis* coll);
+#endif
 U32 xRayHitsEnv(const xRay3* r, const xEnv* env, xCollis* coll);
 S32 xSphereHitsModel3(const xSphere* b, const xModelInstance* m, xCollis* colls, U8 ncolls, F32 sth);
 S32 xSphereHitsEnv4(const xSphere* b, const xEnv* env, const xMat3x3* mat, xCollis* colls); // UNUSED
 S32 xSphereHitsEnv3(const xSphere* b, const xEnv* env, xCollis* colls, U8 ncolls, F32 sth);
 U32 xSphereHitsEnv(const xSphere* b, const xEnv* env, xCollis* coll);
 bool xOBBHitsEnt(const xBox& box, const xMat4x3& mat, const xEnt* ent, const xQCData* quickCullData);
+#if GAME == RAT
 bool xOBBHitsScene(const xBox& box, const xMat4x3& mat, xScene* sc, const xEnt* object, U8 collType, U8 chk);
+#endif
 bool xOBBHitsEnv(const xBox& box, const xMat4x3& mat, const xEnv* env);
 bool xOBBHitsModel(const xBox& box, const xMat4x3& mat, const xModelInstance* model);
 

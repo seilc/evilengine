@@ -2196,6 +2196,7 @@ U32 xRayHitsModel(const xRay3* r, const xModelInstance* m, xCollis* coll)
     return coll->flags & k_HIT_IT;
 }
 
+#if GAME == RAT
 U32 xRayHitsJSP(const xRay3* r, const xJSPHeader* jsp, xCollis* coll)
 {
     RpIntersection isx;
@@ -2251,6 +2252,7 @@ U32 xRayHitsJSP(const xRay3* r, const xJSPHeader* jsp, xCollis* coll)
 
     return coll->flags & k_HIT_IT;
 }
+#endif
 
 U32 xRayHitsEnv(const xRay3* r, const xEnv* env, xCollis* coll)
 {
@@ -2707,6 +2709,7 @@ namespace {
     };
 }
 
+#if GAME == RAT
 bool xOBBHitsScene(const xBox& box, const xMat4x3& mat, xScene* sc, const xEnt* object, U8 collType, U8 chk)
 {
     xMat4x3 tempMat;
@@ -2735,6 +2738,7 @@ bool xOBBHitsScene(const xBox& box, const xMat4x3& mat, xScene* sc, const xEnt* 
 
     return hit;
 }
+#endif
 
 bool xOBBHitsEnv(const xBox& box, const xMat4x3& mat, const xEnv* env)
 {
