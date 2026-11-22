@@ -606,7 +606,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iFX.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iLight.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iMath.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/gc/iMath3.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iMath3.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iMemMgr.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iModel.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iMorph.cpp"),

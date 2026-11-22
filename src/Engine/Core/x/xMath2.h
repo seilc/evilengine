@@ -134,7 +134,12 @@ inline F32 xVec2Dist(F32 x1, F32 y1, F32 x2, F32 y2)
     return xsqrt(dx * dx + dy * dy);
 }
 
-inline void xVec2SubFromC(xVec2* o, F32 x, F32 y); // UNUSED
+inline void xVec2SubFromC(xVec2* o, F32 x, F32 y)
+{
+    o->x -= x;
+    o->y -= y;
+}
+
 inline F32 xVec2LengthC(F32 x, F32 y); // UNUSED
 
 inline F32 xMath2NearestPointOnLine(F32& Px, F32& Py, F32 Cx, F32 Cy, F32 Ax, F32 Ay, F32 Bx, F32 By)

@@ -31,7 +31,7 @@ void iSphereBoundVec(xSphere* o, const xSphere* s, const xVec3* v);
 void iSphereBoundTri(xSphere* o, const xSphere* s, const xTri3* t); // UNUSED
 void iSphereBoundSphere(xSphere* o, const xSphere* a, const xSphere* b);
 void iCylinderIsectVec(const xCylinder* c, const xVec3* v, xIsect* isx);
-void iCylinderIsectRay(const xCylinder* c, const xRay3* r, xIsect* isx); // UNUSED
+void iCylinderIsectRay(const xCylinder* c, const xRay3* r, xIsect* isx);
 void iCylinderIsectCylinder(const xCylinder* c, const xCylinder* p, xIsect* isx); // UNUSED
 void iBoxVecDist(const xBox* box, const xVec3* v, xIsect* isx);
 void iBoxIsectVec(const xBox* b, const xVec3* v, xIsect* isx);

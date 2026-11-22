@@ -237,6 +237,59 @@ void iCylinderIsectVec(const xCylinder* c, const xVec3* v, xIsect* isx)
     }
 }
 
+void iCylinderIsectRay(const xCylinder* c, const xRay3* r, xIsect* isx)
+{
+    F32 a, b, t_in, t_out;
+    U32 num;
+    xVec2 d2d, o2d;
+
+    xVec2Init(&d2d, r->dir.x, r->dir.z);
+    xVec2Init(&o2d, r->origin.x, r->origin.z);
+    xVec2SubFromC(&o2d, c->center.x, c->center.z);
+    num = xMathSolveQuadratic(xVec2Dot(&d2d, &d2d), 2.0f * xVec2Dot(&o2d, &d2d), xVec2Dot(&o2d, &o2d) - xsqr(c->r),
+                              &t_in, &t_out);
+
+    if (num == 0) {
+        isx->penned = 1.0f;
+        return;
+    }
+
+    a = c->center.y - c->h;
+    b = c->center.y + c->h;
+    if (t_in < 0.0f) {
+        if (num == 1 || t_out < 0.0f) {
+            isx->penned = 1.0f;
+            return;
+        }
+        xRay3Eval(&isx->norm, r, t_in);
+        if (isx->norm.y >= a && isx->norm.y <= b) {
+            isx->dist = t_out;
+            isx->contained = -1.0f;
+        } else {
+            isx->penned = 1.0f;
+            return;
+        }
+    } else {
+        xRay3Eval(&isx->norm, r, t_in);
+        if (isx->norm.y >= a && isx->norm.y <= b) {
+            isx->dist = t_in;
+            isx->contained = 1.0f;
+        } else {
+            // BUG: evaluates t_in again, not t_out
+            xRay3Eval(&isx->norm, r, t_in);
+            if (isx->norm.y >= a && isx->norm.y <= b) {
+                isx->dist = t_out;
+                isx->contained = 1.0f;
+            } else {
+                isx->penned = 1.0f;
+                return;
+            }
+        }
+    }
+
+    isx->penned = -1.0f;
+}
+
 void iBoxVecDist(const xBox* box, const xVec3* v, xIsect* isx)
 {
     if (v->x < box->lower.x) {

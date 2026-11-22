@@ -437,7 +437,12 @@ do {                                            \
     xVec3SMul((o), (o), 0.5f);                  \
 } while (0)
 
-inline void xRay3Eval(xVec3* o, const xRay3* r, F32 t);
+inline void xRay3Eval(xVec3* o, const xRay3* r, F32 t)
+{
+    xVec3Copy(o, &r->dir);
+    xVec3SMulBy(o, t);
+    xVec3AddTo(o, &r->origin);
+}
 
 #define xLine3FromRay(ln, r)                                                                                                                        \
 do {                                                                                                                                                \
