@@ -47,7 +47,6 @@ U32 xRayHitsBoxFast(const xRay3* r, const xBox* b)
     return (isx.penned <= 0.0f || isx.contained <= 0.0f);
 }
 
-// UNUSED: needed to match (code from RotU GC, Incredibles GC)
 U32 xRayHitsCylinderFast(const xRay3* r, const xCylinder* c)
 {
     xASSERT(r);
@@ -59,7 +58,6 @@ U32 xRayHitsCylinderFast(const xRay3* r, const xCylinder* c)
     return (isx.penned <= 0.0f || isx.contained <= 0.0f);
 }
 
-// UNUSED: needed to match (code from RotU GC, Incredibles GC)
 U32 xRayHitsBoundFast(const xRay3* r, const xBound* b)
 {
     xASSERT(r);
