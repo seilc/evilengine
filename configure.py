@@ -1001,7 +1001,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zPlayerOneLinerData.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPortal.cpp"),
             GameObject(NonMatching, "Engine/Game/zPourStream.cpp", sym="on"),
-            GameObject(MatchingFor("RAT"), "Engine/Game/zProgressScript.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zProgressScript.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPushableObject.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zRaftTrack.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zRatBallPlayer.cpp", sym="on"),
