@@ -2,12 +2,12 @@
 """Draw a treemap of every game's Game units as a PNG, for the Discord progress post and the README.
 
 Usage: treemap.py CUR_DIR OUT.png [PREV_DIR]
-One box per file over all games (the units of each game's first version, Rat's DEBUG, so units only Rat's other builds
-have are left out; the same file name in several games is one file), grouped by folder and sized by its code bytes
-summed over the games that have it (tiny units raised to a minimum box; units without code left out): green is
+One box per file over all games (the units of each game's versions, each from the first version with code for it, Rat's
+DEBUG before its other builds; the same file name in several games is one file), grouped by folder and sized by its code
+bytes summed over the games that have it (tiny units raised to a minimum box; units without code left out): green is
 complete in every game that has it, grey has nothing matched, and blue is partly matched, its brightness rising in a
-straight line with the matched code over those games (a file done in one game only is blue by that game's share of
-its bytes: about 64% for Rat's DEBUG beside RotU). With PREV_DIR, files whose match changed in any version of any game get
+straight line with the matched code over those games (a file done in one game only is blue by that game's share of its
+bytes: about 64% for Rat's DEBUG beside RotU). With PREV_DIR, files whose match changed in any version of any game get
 an outline, or a yellow fill when too small for one. Wide and short, with folder headings only, to stay readable on a
 phone without filling the screen.
 Each directory holds <VERSION>_report/report.json, as for progress.py. Needs Pillow; progress.py doesn't, so a failure
@@ -165,8 +165,12 @@ def main():
     changed = changed_units(cur_dir, prev_dir)
     files = {}  # file name: [folder, [its unit in each game]]
     for vers in GAMES.values():
-        for key, unit in (load(cur_dir, vers[0]) or {}).items():
-            if code(unit):
+        seen = set()
+        for ver in vers:
+            for key, unit in (load(cur_dir, ver) or {}).items():
+                if not code(unit) or key in seen:
+                    continue
+                seen.add(key)
                 parts = key.split("/")[1:]  # without the game's source folder
                 folder = "/".join([p for p in parts[:-1] if p != "Engine"][:2]) or "(top)"
                 files.setdefault(parts[-1], [folder, []])[1].append(unit)
