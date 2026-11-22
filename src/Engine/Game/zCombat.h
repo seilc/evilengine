@@ -87,6 +87,8 @@ private:
 #endif
 };
 
+void zCombatDamage(xEnt* ent, const zCombatDamageInfo& damageInfo);
+
 inline zCombat* zCombatGetFrom(xEnt* ent)
 {
     if (xSkyDome_EntityIsSkyDome(ent)) {
@@ -95,7 +97,5 @@ inline zCombat* zCombatGetFrom(xEnt* ent)
 
     return (zCombat*)ent->user_data;
 }
-
-void zCombatDamage(xEnt* ent, const zCombatDamageInfo& damageInfo);
 
 #endif
