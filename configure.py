@@ -752,7 +752,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xTimer.cpp"),
             GameObject(Matching, "Engine/Core/x/xTimestamp.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xTransient.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xTRC.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xTRC.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xUpdateCull.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xutil.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xVec3.cpp"),

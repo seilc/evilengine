@@ -5,6 +5,9 @@
 #include "xFont.h"
 #include "xPad.h"
 #include "xTextAsset.h"
+#if GAME == ROTU
+#include "xutil.h"
+#endif
 #include "iDraw.h"
 #include "zGameState.h"
 #include "zGlobals.h"
@@ -13,6 +16,11 @@
 #include "zPlayer.h"
 #include "zScene.h"
 #include "zVar.h"
+#if GAME == ROTU
+#include "zMrIncrediblePlayer.h"
+#include "zFrozonePlayer.h"
+#include "xSpacePartitionTree.h"
+#endif
 
 #include <string.h>
 
@@ -312,23 +320,88 @@ void xTRCPadReOrder()
         xTRCBabbleSort(xTRCIsNextState, TRC_PadMissing);
 }
 
+#if GAME == ROTU
+void xTRCSetCharactersControl(S32 i)
+{
+    S32 mriPad = zPlayerMRIGetLastUsedPad();
+    S32 froPad = zPlayerFROGetLastUsedPad();
+    if (mriPad == -1 && froPad == -1) {
+        if (globals.sceneCur->sceneID != IDTAG('M','N','U','S')) {
+            if (xTRCPadCountWereActiveTotal() == 1) {
+                if (xglobals->players.GetMrI()->Get_humanPlayer()) {
+                    zPlayerMRICreatePartAtPort(-1);
+                } else {
+                    zPlayerFROCreatePartAtPort(-1);
+                }
+            } else if (xTRCPadCountWereActiveTotal() == 2) {
+                zPlayerMRICreatePartAtPort(-1);
+                zPlayerFROCreatePartAtPort(-1);
+            }
+        }
+    } else {
+        if (xglobals->players.GetMrI()->Get_humanPlayer()) {
+            if (!xglobals->players.GetMrI()->GetPad() || xglobals->players.GetMrI()->GetPad()->GetPadPort() == -1) {
+                if (mriPad == gTrcPad[i].id) {
+                    zPlayerMRICreatePartAtPort(gTrcPad[i].id);
+                } else if (mriPad == -1) {
+                    zPlayerMRICreatePartAtPort(-1);
+                }
+            }
+        }
+        if (xglobals->players.GetFrozone()->Get_humanPlayer()) {
+            if (!xglobals->players.GetFrozone()->GetPad() || xglobals->players.GetFrozone()->GetPad()->GetPadPort() == -1) {
+                if (froPad == gTrcPad[i].id) {
+                    zPlayerFROCreatePartAtPort(gTrcPad[i].id);
+                } else if (froPad == -1) {
+                    zPlayerFROCreatePartAtPort(-1);
+                }
+            }
+        }
+    }
+}
+#endif
+
 S32 xTRCPadGetPort_Player1()
 {
+#if GAME == RAT
     if (xglobals->players.size() >= 1) {
         zPad* pad = xglobals->players[0]->GetPad();
         if (pad)
             return pad->GetPadPort();
     }
+#else
+    for (S32 i = 0; i < xglobals->players.size(); i++) {
+        if (xglobals->players[i]->IsUsingLeftHUD()) {
+            zPad* pad = xglobals->players[i]->GetPad();
+            if (pad) {
+                return pad->GetPadPort();
+            }
+            return -1;
+        }
+    }
+#endif
     return -1;
 }
 
 S32 xTRCPadGetPort_Player2()
 {
+#if GAME == RAT
     if (xglobals->players.size() >= 2) {
         zPad* pad = xglobals->players[1]->GetPad();
         if (pad)
             return pad->GetPadPort();
     }
+#else
+    for (S32 i = 0; i < xglobals->players.size(); i++) {
+        if (!xglobals->players[i]->IsUsingLeftHUD()) {
+            zPad* pad = xglobals->players[i]->GetPad();
+            if (pad) {
+                return pad->GetPadPort();
+            }
+            return -1;
+        }
+    }
+#endif
     return -1;
 }
 
@@ -355,6 +428,9 @@ void xTRCUpdate(S32 i)
                 gTrcPad[i].padstate = TRC_PadStatePresent;
                 mPad[gTrcPad[i].id].pressed = 0;
                 mPad[gTrcPad[i].id].released = 0;
+#if GAME == ROTU
+                xTRCSetCharactersControl(i);
+#endif
                 S32 padPortP1 = xTRCPadGetPort_Player1();
                 S32 padPortP2 = xTRCPadGetPort_Player2();
                 if (xTRCPadCountWereActiveTotal() == 1) {
@@ -482,6 +558,27 @@ void xTRCRender()
 void xTRCReset()
 {
     xTRCClearPadMsg();
+}
+
+void xTRCPadGetPressed(TRCState padState, bool& A, bool& B, bool& C, bool& D)
+{
+    A = B = C = D = false;
+    for (S32 k = 0; k < k_XPAD_MAX; k++) {
+        if (xTRCPadIsPort(k, padState)) {
+            if (mPad[k].pressed & 0x10000) {
+                A = true;
+            }
+            if (mPad[k].pressed & 0x20000) {
+                B = true;
+            }
+            if (mPad[k].pressed & 0x40000) {
+                C = true;
+            }
+            if (mPad[k].pressed & 0x80000) {
+                D = true;
+            }
+        }
+    }
 }
 
 void xTRCPadSetPressed(S32 port, S32 value, bool reverse)

@@ -30,6 +30,10 @@ public:
 #else
     S32 size() { return 2; }
 #endif
+#if GAME == ROTU
+    zPlayer* GetMrI() { return playerArray[0]; }
+    zPlayer* GetFrozone() { return playerArray[1]; }
+#endif
     bool IsPlayer(xEnt* ptr);
 
 #if GAME == RAT

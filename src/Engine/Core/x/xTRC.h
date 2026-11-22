@@ -75,6 +75,9 @@ bool xTRCPadIsPort(S32 port, TRCState state);
 bool xTRCPadGetPadPort(S32& idx, TRCState state);
 bool xTRCPadPortWasActive(S32 port);
 void xTRCPadReOrder();
+#if GAME == ROTU
+void xTRCSetCharactersControl(S32 i);
+#endif
 S32 xTRCPadGetPort_Player1();
 S32 xTRCPadGetPort_Player2();
 void xTRCUpdate(S32 i);
@@ -84,7 +87,7 @@ void xTRCInitMessages();
 void xTRCClearPadMsg();
 void xTRCRender();
 void xTRCReset();
-void xTRCPadGetPressed(TRCState padState, bool& A, bool& B, bool& C, bool& D); // UNUSED
+void xTRCPadGetPressed(TRCState padState, bool& A, bool& B, bool& C, bool& D);
 void xTRCPadSetPressed(S32 port, S32 value, bool reverse);
 void xTRCPadDisplayMessage(S32 pad_id, TRCState);
 void xTRCDisk(TRCState state);
