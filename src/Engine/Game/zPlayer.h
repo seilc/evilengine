@@ -154,6 +154,8 @@ public:
     bool CanSayOneLiner();
 #if GAME == ROTU
     bool IsUsingLeftHUD();
+
+    static void ClearGalleryPickupPoints() { galleryPickupPoints = 0; }
 #endif
 
 #if GAME == RAT
@@ -306,6 +308,10 @@ private:
 
 public:
     U32* hitSoundsMap;
+
+#if GAME == ROTU
+    static S32 galleryPickupPoints;
+#endif
 };
 
 #endif
