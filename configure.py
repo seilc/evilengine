@@ -1008,7 +1008,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zRatBallPlayer.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zRatBallPlayerActions.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zReactiveAnimation.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zReference.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zReference.cpp"),
             GameObject(NonMatching, "Engine/Game/zRemyPlayer.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zRemyPlayerActions.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zRenderState.cpp"),
