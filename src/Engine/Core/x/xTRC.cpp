@@ -328,7 +328,7 @@ void xTRCSetCharactersControl(S32 i)
     if (mriPad == -1 && froPad == -1) {
         if (globals.sceneCur->sceneID != IDTAG('M','N','U','S')) {
             if (xTRCPadCountWereActiveTotal() == 1) {
-                if (xglobals->players.GetMrI()->Get_humanPlayer()) {
+                if (CURPLAYERS.GetMrI()->Get_humanPlayer()) {
                     zPlayerMRICreatePartAtPort(-1);
                 } else {
                     zPlayerFROCreatePartAtPort(-1);
@@ -339,8 +339,8 @@ void xTRCSetCharactersControl(S32 i)
             }
         }
     } else {
-        if (xglobals->players.GetMrI()->Get_humanPlayer()) {
-            if (!xglobals->players.GetMrI()->GetPad() || xglobals->players.GetMrI()->GetPad()->GetPadPort() == -1) {
+        if (CURPLAYERS.GetMrI()->Get_humanPlayer()) {
+            if (!CURPLAYERS.GetMrI()->GetPad() || CURPLAYERS.GetMrI()->GetPad()->GetPadPort() == -1) {
                 if (mriPad == gTrcPad[i].id) {
                     zPlayerMRICreatePartAtPort(gTrcPad[i].id);
                 } else if (mriPad == -1) {
@@ -348,8 +348,8 @@ void xTRCSetCharactersControl(S32 i)
                 }
             }
         }
-        if (xglobals->players.GetFrozone()->Get_humanPlayer()) {
-            if (!xglobals->players.GetFrozone()->GetPad() || xglobals->players.GetFrozone()->GetPad()->GetPadPort() == -1) {
+        if (CURPLAYERS.GetFrozone()->Get_humanPlayer()) {
+            if (!CURPLAYERS.GetFrozone()->GetPad() || CURPLAYERS.GetFrozone()->GetPad()->GetPadPort() == -1) {
                 if (froPad == gTrcPad[i].id) {
                     zPlayerFROCreatePartAtPort(gTrcPad[i].id);
                 } else if (froPad == -1) {
@@ -364,15 +364,15 @@ void xTRCSetCharactersControl(S32 i)
 S32 xTRCPadGetPort_Player1()
 {
 #if GAME == RAT
-    if (xglobals->players.size() >= 1) {
-        zPad* pad = xglobals->players[0]->GetPad();
+    if (CURPLAYERS.size() >= 1) {
+        zPad* pad = CURPLAYERS[0]->GetPad();
         if (pad)
             return pad->GetPadPort();
     }
 #else
-    for (S32 i = 0; i < xglobals->players.size(); i++) {
-        if (xglobals->players[i]->IsUsingLeftHUD()) {
-            zPad* pad = xglobals->players[i]->GetPad();
+    for (S32 i = 0; i < CURPLAYERS.size(); i++) {
+        if (CURPLAYERS[i]->IsUsingLeftHUD()) {
+            zPad* pad = CURPLAYERS[i]->GetPad();
             if (pad) {
                 return pad->GetPadPort();
             }
@@ -386,15 +386,15 @@ S32 xTRCPadGetPort_Player1()
 S32 xTRCPadGetPort_Player2()
 {
 #if GAME == RAT
-    if (xglobals->players.size() >= 2) {
-        zPad* pad = xglobals->players[1]->GetPad();
+    if (CURPLAYERS.size() >= 2) {
+        zPad* pad = CURPLAYERS[1]->GetPad();
         if (pad)
             return pad->GetPadPort();
     }
 #else
-    for (S32 i = 0; i < xglobals->players.size(); i++) {
-        if (!xglobals->players[i]->IsUsingLeftHUD()) {
-            zPad* pad = xglobals->players[i]->GetPad();
+    for (S32 i = 0; i < CURPLAYERS.size(); i++) {
+        if (!CURPLAYERS[i]->IsUsingLeftHUD()) {
+            zPad* pad = CURPLAYERS[i]->GetPad();
             if (pad) {
                 return pad->GetPadPort();
             }
