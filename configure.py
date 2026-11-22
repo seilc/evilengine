@@ -854,7 +854,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zFire.cpp"),
             GameObject(NonMatching, "Engine/Game/zFlameEmitter.cpp"),
             GameObject(NonMatching, "Engine/Game/zFlameThrower.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zFMV.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zFMV.cpp"),
             GameObject(NonMatching, "Engine/Game/zForceFieldEffect.cpp", sym="on"),
             GameObject(MatchingFor("RAT"), "Engine/Game/zFrostEffect.cpp", sym="on"),
             GameObject(MatchingFor("RAT"), "Engine/Game/zFrozoneBlast.cpp", sym="on"),
