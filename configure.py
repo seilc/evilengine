@@ -896,7 +896,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zJSPExtraData.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zLaserBeam.cpp"),
             GameObject(NonMatching, "Engine/Game/zLightning.cpp"),
-            GameObject(NonMatching, "Engine/Game/zLightWeight.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zLightWeight.cpp"),
             GameObject(NonMatching, "Engine/Game/zLoadingScreen.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zLOD.cpp"),
             GameObject(NonMatching, "Engine/Game/zMain.cpp"),
