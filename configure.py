@@ -1082,7 +1082,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zVent.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zVentType.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zVolume.cpp"),
-            GameObject(NonMatching, "Engine/Game/zWater.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zWater.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zWaterhose.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zWireFrameAsset.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zZipLine.cpp"),
