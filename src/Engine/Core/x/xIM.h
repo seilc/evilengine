@@ -34,7 +34,11 @@ void xIMLock(xIMLockContext& context, xIMFormat format, S32 vertCount, const xIM
 void xIMLock2(xIMLockContext& context1, xIMLockContext& context2, xIMFormat format, S32 vertCount, const xIMLockParameters& params1, const xIMLockParameters& params2); // UNUSED
 void xIMUnlock(xIMLockContext& context);
 void xIMRender(xIMLockContext& context, const xMat4x3* mat, U32 flags);
+#if GAME == RAT
 void xIM2DRenderQuad(F32 x1, F32 y1, F32 x2, F32 y2, F32 uMax, F32 vMax, U32 alpha, U32 r, U32 g, U32 b);
+#else
+void xIM2DRenderQuad(F32 x1, F32 y1, F32 x2, F32 y2, F32 uMax, F32 vMax, U32 alpha);
+#endif
 
 inline void xIMRenderLegacy(const RwIm3DVertex* verts, U32 count, const RwMatrix* ltm, RwPrimitiveType primType)
 {

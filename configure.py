@@ -871,7 +871,7 @@ config.libs = [
             GameObject(MatchingFor("RAT"), "Engine/Game/zFXPunchSnow.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zFXPunchStars.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zFXRibbonPool.cpp"),
-            GameObject(NonMatching, "Engine/Game/zFXScreenDecal.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zFXScreenDecal.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zFXShockwave.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zGame.cpp"),
             GameObject(NonMatching, "Engine/Game/zGameExtras.cpp"),
