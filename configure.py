@@ -1035,7 +1035,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zTaskBox.cpp"),
             GameObject(NonMatching, "Engine/Game/zTextBox.cpp"),
             GameObject(NonMatching, "Engine/Game/zThrowableSystem.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zTimeHandler.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zTimeHandler.cpp", sym="on"),
             GameObject(Matching, "Engine/Game/zTimer.cpp"),
             GameObject(NonMatching, "Engine/Game/zToss.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zTrainCar.cpp"),
