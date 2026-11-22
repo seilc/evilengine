@@ -1068,7 +1068,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zUICustomStatic.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zUICustomStatsScreen.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zUICustomSysMessage.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zUICustomUpgrade.cpp", sym="on"),
+            GameObject(MatchingFor("RAT"), "Engine/Game/zUICustomUpgrade.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zUICustomVolume.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zUICustomWireframe.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zUIImage.cpp"),

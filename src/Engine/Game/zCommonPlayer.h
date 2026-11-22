@@ -3,7 +3,13 @@
 
 #include "zPlayer.h"
 
+#if GAME == RAT
+struct xEnv;
+struct xHierarchyBoundInitData;
+struct zSurfAssetIN;
+#else
 #define MAX_EXP_POINTS 27500
+#endif
 
 enum zCommonPlayerUpgradeType
 {
@@ -23,6 +29,26 @@ enum zCommonPlayerUpgradeLevel
     ezCommonPlayerUpgradeLevel_Count
 };
 
+#if GAME == RAT
+struct zCommonPlayer : zPlayer
+{
+    virtual S32 EnvCollision(xSweptSphere* sphere, xEnv*);
+    virtual void BreakGrab();
+    virtual void BeforeAnimMatrices(xAnimPlay*, xQuat*, xVec3*, S32);
+    virtual void LoadUpgrades();
+    virtual U8 DoCriticalCollisionCheck() const;
+    virtual xHierarchyBoundInitData* GetHierarchyBoundInitData() const;
+    virtual F32 GetHierarchyMasterRadius() const;
+    virtual void AbsControl(F32 x, F32 z, F32 dt);
+    virtual void Rumble(U32 rumbleType);
+    virtual void SetupRumbles();
+    virtual void HandleFootstepCustom(zSurfAssetIN*);
+    virtual void SavedFriend();
+    virtual void SetUpgrade(zCommonPlayerUpgradeType forThisType, zCommonPlayerUpgradeLevel level);
+
+    zCommonPlayerUpgradeLevel GetUpgradeLevel(zCommonPlayerUpgradeType forThisType);
+};
+#else
 class zCommonPlayer : public zPlayer
 {
 public:
@@ -74,5 +100,6 @@ protected:
 private:
     U8 unkE3C[0x4F4];
 };
+#endif
 
 #endif
