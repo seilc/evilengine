@@ -115,7 +115,7 @@ U32 xSndMgrIsReady(xSndHandle& hSound);
 void xSndMgrPause(xSndHandle& hSound, bool bPause);
 void xSndMgrStop(xSndHandle& hSound);
 void xSndMgrSetVolume(xSndHandle& hSound, F32 fVolume, bool assetRelative);
-void xSndMgrSetPitch(xSndHandle& hSound, F32 fPitch); // UNUSED
+void xSndMgrSetPitch(xSndHandle& hSound, F32 fPitch);
 void xSndMgrStartStereo(xSndHandle hSnd00, xSndHandle hSnd01);
 void xSndMgrUpdatePosition(xSndHandle& hSound, const xVec3* pVector); // UNUSED
 void xSndMgrChangeAttachedPosition(xSndHandle& hSound, const xVec3* pVector);

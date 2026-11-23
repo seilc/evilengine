@@ -1281,7 +1281,6 @@ void xSndMgrSetVolume(xSndHandle& hSound, F32 fVolume, bool assetRelative)
     }
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void xSndMgrSetPitch(xSndHandle& hSound, F32 fPitch)
 {
     if (hSound == XSNDMGR_INVALID_SND_HANDLE) {
