@@ -612,7 +612,11 @@ inline void xCam::spring_interp(xVec3& s, F32& v, const xVec3& s0, const xVec3& 
 inline void xCam::spring_interp(xQuat& s, F32& v, const xQuat& s0, const xQuat& s1, F32 dt, F32 speed, F32 e)
 {
     F32 sa = xabs(xrmod(xQuatGetAngleDiff(&s0, &s1) + PI) - PI);
+#if GAME == RAT
     if (sa < 0.001f) { s = s1; v = 0.0f; return; }
+#else
+    if (sa < 0.0001f) { s = s1; v = 0.0f; return; }
+#endif
     F32 a = sa;
     xDampSpring(a, v, dt, speed, e);
     if (v > 0.0f) v = 0.0f;

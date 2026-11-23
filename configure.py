@@ -656,7 +656,7 @@ config.libs = [
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xEnt.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xEntBoulder.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xEntDrive.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xEntMotion.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xEntMotion.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xEnv.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xEvent.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFactory.cpp"),
