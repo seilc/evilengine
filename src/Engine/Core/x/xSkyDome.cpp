@@ -1,10 +1,16 @@
 #include "xCommon.h"
 #include "xSkyDome.h"
 
+#if GAME == RAT
 #include "zBase.h"
+#endif
 #include "zEvent.h"
 #include "iCamera.h"
+#if GAME == RAT
 #include "zRenderState.h"
+#else
+#include "xRenderState.h"
+#endif
 
 #include "decomp.h"
 
@@ -14,7 +20,9 @@ struct SkyDomeInfo
     S32 sortorder;
     S32 lockXZ;
     S32 lockY;
+#if GAME == RAT
     S32 zReadWrite;
+#endif
 };
 
 #define MAX_SKYDOME_OBJECTS 16
@@ -31,7 +39,11 @@ void xSkyDome_Setup()
     sSkyCount = 0;
 }
 
+#if GAME == RAT
 void xSkyDome_AddEntity(xEnt* ent, S32 sortorder, S32 lockY, S32 lockXZ, S32 ZReadWrite)
+#else
+void xSkyDome_AddEntity(xEnt* ent, S32 sortorder, S32 lockY, S32 lockXZ)
+#endif
 {
     if (xSkyDome_EntityIsSkyDome(ent)) {
         S32 index = (S32)ent->user_data;
@@ -66,7 +78,9 @@ void xSkyDome_AddEntity(xEnt* ent, S32 sortorder, S32 lockY, S32 lockXZ, S32 ZRe
         sSkyList[i].sortorder = sortorder;
         sSkyList[i].lockY = lockY;
         sSkyList[i].lockXZ = lockXZ;
+#if GAME == RAT
         sSkyList[i].zReadWrite = ZReadWrite;
+#endif
         sSkyCount++;
         ent->user_data = (void*)i;
         ent->model->Flags &= (U16)~ModelInstance_Render;
@@ -74,9 +88,11 @@ void xSkyDome_AddEntity(xEnt* ent, S32 sortorder, S32 lockY, S32 lockXZ, S32 ZRe
 
     ent->render = xSkyDome_EmptyRender;
     ent->baseFlags &= (U16)~k_XBASE_RECEIVES_SHADOWS;
+#if GAME == RAT
     if (ent->baseType == eBaseTypePlatform) {
         ent->baseFlags |= k_XBASE_UNK_0x80;
     }
+#endif
 
     zEntEvent(ent, eEventCollisionOff);
     zEntEvent(ent, eEventCameraCollideOff);
@@ -87,16 +103,29 @@ void xSkyDome_Render()
     RwCamera* cam = RwCameraGetCurrentCamera();
     RwFrame* camframe = RwCameraGetFrame(cam);
     RwMatrix* cammat = RwFrameGetMatrix(camframe);
+#if GAME != RAT
+    RwReal far_clip = RwCameraGetFarClipPlane(cam);
+#endif
 
     RwCameraEndUpdate(cam);
 
+#if GAME == RAT
     if (sSkyCount > 0) {
         RwReal far_clip = RwCameraGetFarClipPlane(cam);
+#endif
         RwCameraSetFarClipPlane(cam, 10000.0f);
+#if GAME == RAT
         RwCameraBeginUpdateWrapper(cam);
         zRenderState(eRenderStateSkyDomeBack);
 
         S32 useZBuf = FALSE;
+#else
+        RwRGBA color = { 0, 0, 0, 0 };
+        RwCameraClear(cam, &color, (rwCAMERACLEARZ|rwCAMERACLEARSTENCIL));
+        RwCameraBeginUpdateWrapper(cam);
+        xRenderStateZModesSet(FALSE, FALSE);
+#endif
+
         for (S32 i = 0; i < sSkyCount; i++) {
             xEnt* ent = sSkyList[i].ent;
             ent->model->Flags &= (U16)~ModelInstance_Render;
@@ -120,6 +149,7 @@ void xSkyDome_Render()
                     xModelRenderLogSetEntity(ent);
 #endif
 
+#if GAME == RAT
                 if (useZBuf != sSkyList[i].zReadWrite) {
                     xASSERT_DESIGN_L(202, i != 0 || !sSkyList[i].zReadWrite,
                                        "ART/DESIGN: Outermost SkyDome layer must have \"Set SkyDome\" parameter 4 set to 0!");
@@ -133,6 +163,7 @@ void xSkyDome_Render()
                 else if (i == 1 && !sSkyList[i].zReadWrite) {
                     zRenderState(eRenderStateSkyDomeFlat);
                 }
+#endif
 
                 iModelRender(ent->model->Data, ent->model->Mat);
             }
@@ -142,10 +173,12 @@ void xSkyDome_Render()
 
         RwCameraEndUpdate(cam);
         RwCameraSetFarClipPlane(cam, far_clip);
+#if GAME == RAT
     }
     
     RwRGBA color = { 0, 0, 0, 0 };
     RwCameraClear(cam, &color, (rwCAMERACLEARZ|rwCAMERACLEARSTENCIL));
+#endif
     RwCameraBeginUpdateWrapper(cam);
 }
 

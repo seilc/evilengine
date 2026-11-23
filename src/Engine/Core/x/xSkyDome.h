@@ -5,7 +5,11 @@
 
 void xSkyDome_EmptyRender(xEnt*);
 void xSkyDome_Setup();
+#if GAME == RAT
 void xSkyDome_AddEntity(xEnt* ent, S32 sortorder, S32 lockY, S32 lockXZ, S32 ZReadWrite);
+#else
+void xSkyDome_AddEntity(xEnt* ent, S32 sortorder, S32 lockY, S32 lockXZ);
+#endif
 void xSkyDome_Render();
 void xSkyDome_GetSettings(xEnt* ent, S32& sortorder, S32& lockY, S32& lockXZ); // UNUSED
 void xSkyDome_BeginRenderSingle(); // UNUSED
