@@ -999,7 +999,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zPlayerContainer.cpp", sym="on"),
             GameObject(MatchingFor("RAT"), "Engine/Game/zPlayerInput.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPlayerLocationPlatform.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zPlayerOneLinerData.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zPlayerOneLinerData.cpp", sym="on"),
             GameObject(MatchingFor("RAT"), "Engine/Game/zPortal.cpp"),
             GameObject(NonMatching, "Engine/Game/zPourStream.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zProgressScript.cpp", sym="on"),
