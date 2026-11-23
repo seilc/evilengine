@@ -954,7 +954,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zNPCMove.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCNavigation.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Game/zNPCNavigationMesh.cpp"),
-            GameObject(NonMatching, "Engine/Game/zNPCOneLiner.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zNPCOneLiner.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCPerception.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCProjectileFrozen.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCProjectileGrub.cpp", sym="on"),
