@@ -15,6 +15,9 @@
 #include "zGlobals.h"
 #include "zScene.h"
 #include "zUI.h"
+#if GAME == ROTU
+#include "zUICustom.h"
+#endif
 
 #include <stdint.h>
 
@@ -640,6 +643,10 @@ void xCMstop()
             zEntEvent(credits_parentID, eEventCreditsEndedBackToMainMenu);
         else if (!zGameIsPaused())
             zEntEvent(credits_parentID, eEventCreditsEnded);
+#if GAME == ROTU
+        else
+            zSendUIEvent("UI PREV SCREEN HANDLER", eEventPadPressTriangle);
+#endif
     }
 }
 
