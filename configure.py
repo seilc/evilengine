@@ -208,12 +208,17 @@ config.reconfig_deps = []
 # Can be overridden in libraries or objects
 config.scratch_preset_id = None
 
-# xParSys includes "xPTankPool.h": __FILE__ needs that exact file (wibo resolves case). Made whatever the wrapper:
-# fullcheck's hicc wrapper still runs wibo, and hicc's key can't tell a case-variant alias from its target
+# xParSys includes "xPTankPool.h", zToss.h "zlightweight.h": __FILE__ needs each exact file (wibo resolves case).
+# Made whatever the wrapper: fullcheck's hicc wrapper still runs wibo, and hicc's key can't tell a case-variant alias
+# from its target
 if sys.platform == "linux":
-    ptank_alias = Path("src/Engine/Core/x/xPTankPool.h")
-    if not ptank_alias.is_symlink():
-        ptank_alias.symlink_to("xPtankPool.h")
+    for alias, target in (
+        ("src/Engine/Core/x/xPTankPool.h", "xPtankPool.h"),
+        ("src/Engine/Game/zlightweight.h", "zLightWeight.h"),
+    ):
+        alias = Path(alias)
+        if not alias.is_symlink():
+            alias.symlink_to(target)
 
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
@@ -1037,7 +1042,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zThrowableSystem.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zTimeHandler.cpp", sym="on"),
             GameObject(Matching, "Engine/Game/zTimer.cpp"),
-            GameObject(NonMatching, "Engine/Game/zToss.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zToss.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zTrainCar.cpp"),
             GameObject(NonMatching, "Engine/Game/zTransient.cpp"),
             GameObject(NonMatching, "Engine/Game/zTransientModel.cpp", sym="on"),
