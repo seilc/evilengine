@@ -13,7 +13,9 @@ extern S32 xent_entent;
 extern S32 xent_nqcrejects;
 #endif
 
+#if GAME == RAT
 #define NUM_SEPERATION_AXES 13
+#endif
 
 // UNUSED: needed to match (speculative code)
 void xBoundMakeSphere(xBound& b, const xVec3& center, F32 radius)
@@ -125,6 +127,7 @@ void xBoundGetSphere(xSphere& o, const xBound& bound)
     }
 }
 
+#if GAME == RAT
 // UNUSED: needed to match (speculative code)
 void xBoundGetSphere2(xSphere& o, const xBound& bound)
 {
@@ -148,6 +151,7 @@ void xBoundGetSphere2(xSphere& o, const xBound& bound)
         xFAIL_MSG("Unsupported bound type.");
     }
 }
+#endif
 
 void xBoundSphereHitsOBB(const xSphere* s, const xBox* b, const xMat4x3* m, xCollis* coll)
 {
@@ -468,6 +472,7 @@ void xBoundGetCenter(const xBound* b, xVec3* center)
     }
 }
 
+#if GAME == RAT
 bool xOBBHitsTriangle(const xBox& box, const xMat4x3& mat, const xVec3* vertices)
 {
     xVec3 dist;
@@ -519,3 +524,4 @@ bool xOBBHitsTriangle(const xBox& box, const xMat4x3& mat, const xVec3* vertices
 
     return true;
 }
+#endif

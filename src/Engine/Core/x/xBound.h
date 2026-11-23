@@ -37,7 +37,9 @@ void xBoundUpdate(xBound* b);
 void xBoundGetBox(xBox& box, const xBound& bound);
 void xBoundGetCylinder(xCylinder& o, const xBound& bound);
 void xBoundGetSphere(xSphere& o, const xBound& bound);
+#if GAME == RAT
 void xBoundGetSphere2(xSphere& o, const xBound& bound); // UNUSED
+#endif
 void xBoundSphereHitsOBB(const xSphere* s, const xBox* b, const xMat4x3* m, xCollis* coll);
 void xBoundHitsBound(const xBound* a, const xBound* b, xCollis* c);
 void xBoundHitsEnv(const xBound*, const xEnv*, xCollis*); // UNUSED
