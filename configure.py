@@ -983,7 +983,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zParticleSystemPop.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zParticleSystemPuffer.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zParticleSystemRain.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zParticleSystems.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zParticleSystems.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zParticleSystemSnow.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zParticleSystemWaterfall.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zPendulum.cpp"),
