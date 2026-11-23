@@ -31,7 +31,11 @@ static void DefaultFMVPauseSoundCB(bool doPause)
     if (zGameIsPaused()) {
         xSndMgrPauseSounds(xSndCat_UI, doPause, true);
 
+#if GAME == RAT
         if (globals.sceneCur && globals.sceneCur->sceneID == IDTAG('M','N','U','S')) {
+#else
+        if (globals.sceneCur->sceneID == IDTAG('M','N','U','S')) {
+#endif
             if (zMenuRunning()) {
                 xSndMgrPauseSounds(xSndCat_ALL, doPause, true);
             }

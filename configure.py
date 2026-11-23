@@ -662,7 +662,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFactory.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFFX.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFilter.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xFMV.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFMV.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFog.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xFont.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFunctionGenerator.cpp", sym="on"),
