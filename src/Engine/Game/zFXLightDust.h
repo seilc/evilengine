@@ -37,7 +37,7 @@ public:
     static void emit(const xVec3& position, const xVec3& normal, F32& emit_remaining, const xVec3& velocity, F32 dt,
                      config* cfg, F32 velocity_scale, F32 emit_scale);
     static void emit_line(const xVec3& startPos, const xVec3& endPos, const xVec3& normal, F32& emit_remaining,
-                          const xVec3& velocity, F32 dt, config* cfg);
+                          const xVec3& velocity, F32 dt, config* cfg); // UNUSED
 };
 
 } // namespace zFX

@@ -152,7 +152,7 @@ struct zPlayer : zEnt
 
     virtual bool IsInteractioning();
 
-    bool CanSayOneLiner();
+    bool CanSayOneLiner(); // UNUSED
 #if GAME == ROTU
     bool IsUsingLeftHUD();
 

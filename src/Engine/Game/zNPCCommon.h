@@ -329,8 +329,8 @@ protected:
     F32 prevAlpha;
 };
 
-xEnt* CheckForPlayerInRange2(xEnt* npc, F32 range2);
-xEnt* FindClosestPlayer(xEnt* npc, F32* d2);
+xEnt* CheckForPlayerInRange2(xEnt* npc, F32 range2); // UNUSED
+xEnt* FindClosestPlayer(xEnt* npc, F32* d2); // UNUSED
 
 }
 
