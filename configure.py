@@ -938,7 +938,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zMission.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zModuleExample.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zModuleMgr.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zMovePoint.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zMovePoint.cpp"),
             GameObject(NonMatching, "Engine/Game/zMusic.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Game/zNavigationMesh.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPC.cpp", sym="on"),
