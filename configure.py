@@ -792,7 +792,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zAnimCustom.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zAnimList.cpp"),
             GameObject(NonMatching, "Engine/Game/zAssetTypes.cpp"),
-            GameObject(NonMatching, "Engine/Game/zAsync.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zAsync.cpp", sym="on"),
             GameObject(Matching, "Engine/Game/zBase.cpp"),
             GameObject(NonMatching, "Engine/Game/zBehavior.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zBomb.cpp", sym="on"),
