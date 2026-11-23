@@ -29,6 +29,9 @@
 #include "water/fxembm.h"
 #include "water/texconv.h"
 #include "water/textures.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 
 #include <rwcore.h>
 #include <rpworld.h>
@@ -223,9 +226,11 @@ static RwTexture* iWaterBumpGen(RwTexture* bump, RwTexture* src)
         return NULL;
     }
 
+#if GAME == RAT
     if (!src) {
         return NULL;
     }
+#endif
 
     foo += sTimeElapsed * frameCountScale;
     foo = xfmod(foo, 1.0f);

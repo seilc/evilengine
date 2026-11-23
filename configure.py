@@ -618,7 +618,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iSystem.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iTime.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iTRC.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/gc/iWater.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/iWater.cpp", sym="on"),
             GameObject(Matching, "Engine/Core/gc/screenshot.c", sym="off"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/water/fxembm.c", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/gc/water/fxmain.c", sym="on"),
