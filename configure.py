@@ -894,7 +894,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zHeistMovementPath.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zHeistNPCInterface.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zHitParameters.cpp"),
-            GameObject(NonMatching, "Engine/Game/zHud.cpp", sym="on"),
+            GameObject(MatchingFor("RAT"), "Engine/Game/zHud.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zHUDCompass.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zHumanVehiclePlayer.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zHumanVehiclePlayerActions.cpp", sym="on"),
