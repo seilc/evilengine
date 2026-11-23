@@ -12,6 +12,9 @@
 #include "xGlobals.h"
 #include "xMath.h"
 #include "xScene.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 #include "zEntSimpleObj.h"
 #include "zGoo.h"
 #include "zGrid.h"

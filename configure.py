@@ -643,7 +643,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCollideSphereBox.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCollideSpherePolygon.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCollideSpherePolygonUnprocessed.cpp", sym="on"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xCollideSweptSphere.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCollideSweptSphere.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xColor.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCounter.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xCutscene.cpp"),
