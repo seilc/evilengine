@@ -73,11 +73,7 @@ enum ezBlockDir
     ezBlockDir_Around
 };
 
-#if GAME == RAT
 class zNPCCommon : public zNPCBaseIN2
-#else
-class zNPCCommon : public zNPCBase
-#endif
 {
 public:
     zNPCCommon();

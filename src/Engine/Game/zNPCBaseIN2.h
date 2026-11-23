@@ -12,22 +12,14 @@
 
 namespace zNPC {
 
-#if GAME == RAT
 class zNPCBaseIN2 : public xEnt
-#else
-class zNPCBase : public xEnt
-#endif
 {
 protected:
     zNPCInstance* inst;
 
 public:
     virtual void change_instance(zNPCInstance* new_inst);
-#if GAME == RAT
     virtual ~zNPCBaseIN2();
-#else
-    virtual ~zNPCBase();
-#endif
     virtual void init(zNPCInstance* init_inst);
     virtual void timestep(xScene* xscn, F32 dt);
     virtual void activate();

@@ -4,12 +4,13 @@
 #include "xBase.h"
 #include "xVec3.h"
 
-struct xModelAssetInfo;
-#if GAME == RAT
-struct zNPCAssetIN2;
-#else
-struct zNPCAsset;
+#if GAME != RAT
+#define zNPCAssetIN2 zNPCAsset
+#define zNPCBaseIN2 zNPCBase
 #endif
+
+struct xModelAssetInfo;
+struct zNPCAssetIN2;
 
 struct zStoredSpawn
 {
@@ -24,11 +25,7 @@ struct zStoredSpawn
 
 namespace zNPC {
 
-#if GAME == RAT
 class zNPCBaseIN2;
-#else
-class zNPCBase;
-#endif
 
 class zNPCInstance : public xBase
 {
@@ -41,17 +38,9 @@ protected:
         U32 pad : 29;
     };
 
-#if GAME == RAT
     zNPCBaseIN2* npc_data;
-#else
-    zNPCBase* npc_data;
-#endif
     U32 type;
-#if GAME == RAT
     zNPCAssetIN2* npc_asset;
-#else
-    zNPCAsset* npc_asset;
-#endif
     S32 npc_asset_size;
     const xModelAssetInfo* model_asset;
     xVec3 last_pos;
@@ -74,27 +63,16 @@ public:
     virtual void create_data(void* mem) = 0;
 
     bool StoreSpawnInfo(xBase*, xBase*, U32, const F32*, xBase*, U32);
-#if GAME == RAT
     zNPCBaseIN2* get_data() { return npc_data; }
-#else
-    zNPCBase* get_data() { return npc_data; }
-#endif
 
     zStoredSpawn storedSpawn;
 
     U32 get_type() const { return type; }
 
-#if GAME == RAT
     zNPCAssetIN2* get_npc_asset() const
     {
         return npc_asset;
     }
-#else
-    zNPCAsset* get_npc_asset() const
-    {
-        return npc_asset;
-    }
-#endif
 
     S32 get_npc_asset_size() const
     {
