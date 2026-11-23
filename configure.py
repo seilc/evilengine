@@ -671,7 +671,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFXHighDynamicRange.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xGrid.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xGroup.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xHierarchyBound.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xHierarchyBound.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xhipio.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xHud.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xHudFontMeter.cpp"),

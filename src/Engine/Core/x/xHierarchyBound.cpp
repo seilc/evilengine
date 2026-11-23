@@ -160,7 +160,11 @@ S32 xHierarchyBoundSetup(xHierarchyBound* bound, U32 nodesNumber)
     return sizeof(xHierarchyNode) * nodesSize;
 }
 
+#if GAME == RAT
 void xHierarchyBoundInit(xHierarchyBound* bound, const xHierarchyBoundInitData* init, F32 masterRadius, F32 scale)
+#else
+void xHierarchyBoundInit(xHierarchyBound* bound, const xHierarchyBoundInitData* init, F32 masterRadius, U32 extraBounds, F32 scale)
+#endif
 {
     xASSERT_L(227, bound->nodes);
 
@@ -168,6 +172,10 @@ void xHierarchyBoundInit(xHierarchyBound* bound, const xHierarchyBoundInitData* 
     while (init[count].bone >= -1)
         count++;
     bound->count = count;
+
+#if GAME != RAT
+    bound->nodes = (xHierarchyNode*)xMEMALLOC(sizeof(xHierarchyNode) * (count + extraBounds), 0, eMemMgrTag_HierarchyBound, 0);
+#endif
 
     for (U32 i = 0; i < count; i++) {
         xHierarchyNode& node = bound->nodes[i];
@@ -179,11 +187,17 @@ void xHierarchyBoundInit(xHierarchyBound* bound, const xHierarchyBoundInitData* 
 
     xASSERT_L(246, count <= 255);
     
+#if GAME == RAT
     U32 extraBounds = bound->maxCount - count;
     memset(bound->nodes + count, 0, sizeof(xHierarchyNode) * extraBounds);
+#endif
 
     memset(&bound->master.center, 0, sizeof(bound->master.center));
     bound->master.r = masterRadius * scale;
+#if GAME != RAT
+    bound->maxCount = count + extraBounds;
+    memset(bound->nodes + count, 0, sizeof(xHierarchyNode) * extraBounds);
+#endif
 }
 
 void xHierarchyBoundDraw(const xHierarchyBound* bound, U8 mR, U8 mG, U8 mB, U8 mA, U8 sR, U8 sG, U8 sB, U8 sA, S8 hilight, U8 hR, U8 hG, U8 hB, U8 hA)
