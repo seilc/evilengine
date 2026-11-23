@@ -812,7 +812,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zCamPreset.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCamSpline.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCamSplineCommonMix.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zCamTargetSpline.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zCamTargetSpline.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCheat.cpp"),
             GameObject(NonMatching, "Engine/Game/zCheckpoint.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCineFX.cpp", sym="on"),
