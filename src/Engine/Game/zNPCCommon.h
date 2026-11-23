@@ -45,6 +45,12 @@ enum en_npctyp
     NPC_TYPE_COUNT,
     NPC_TYPE_FORCE_INT = FORCEENUMSIZEINT
 };
+
+#define zNPC_ADD_BEHAVIOR(state, type)                                                            \
+    if (!(state)) {                                                                               \
+        (state) = new (eMemStaticType_0, eMemMgrTag_Enemy) type;                                  \
+        addBehavior((state), -1);                                                                 \
+    }
 #endif
 
 enum ezNPCRumbleType
@@ -111,6 +117,9 @@ public:
     virtual void ExitingSpawnState();
     virtual void PastUpdateDistCleanup();
     virtual void VisibilityCullCleanup();
+#if DEBUG || RELEASE
+    virtual void ForceEnterDeathState();
+#endif
     virtual const char* get_type_name() const;
     virtual bool HasBlockAbility();
     virtual bool HasDodgeAbility();
