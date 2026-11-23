@@ -1337,7 +1337,11 @@ F32 xMat3x3LookVec5(xMat3x3& mat, F32 at_x, F32 at_y, F32 at_z, const xVec3& hin
         mat.right.normalize();
         mat.up.cross(mat.right, mat.at);
     } else {
+#if GAME == RAT
         mat.right.cross(hint_up, mat.at);
+#else
+        mat.right.cross(mat.at, hint_up);
+#endif
         mat.right.normalize();
         mat.up.cross(mat.at, mat.right);
     }
@@ -1608,6 +1612,18 @@ void xMat4x3Rot(xMat4x3* m, const xVec3* a, F32 t, const xVec3* p)
     xMat4x3 temp;
 
     xMat3x3RotC(m, a->x, a->y, a->z, t);
+    xVec3Copy(&m->pos, p);
+
+    xMat3x3Identity(&temp);
+    xVec3Inv(&temp.pos, p);
+    xMat4x3Mul(m, &temp, m);
+}
+
+void xMat4x3RotY(xMat4x3* m, F32 t, const xVec3* p)
+{
+    xMat4x3 temp;
+
+    xMat3x3RotY(m, t);
     xVec3Copy(&m->pos, p);
 
     xMat3x3Identity(&temp);
@@ -1915,4 +1931,35 @@ bool xVec3Eq(const xVec3& a, const xVec3& b, F32 tol)
     }
 
     return true;
+}
+
+bool xCone::Inside(const xVec3& pos, F32 radius, F32* perpCenterDist) const
+{
+    xVec3 diff;
+    diff.Sub(pos, start);
+    F32 perpDistance = diff.dot(dir);
+    if (perpDistance < 0.0f) {
+        return false;
+    }
+
+    if (start.Distance2(pos) > (height + radius) * (height + radius)) {
+        return false;
+    }
+
+    xVec3 shiftedStart = start;
+    shiftedStart.AddScale(dir, -radius / isin(angle));
+
+    xVec3 targetDir;
+    targetDir.Sub(pos, shiftedStart);
+    targetDir.safe_normalize(dir);
+
+    bool inCone = targetDir.dot(dir) >= icos(angle);
+    if (inCone) {
+        if (perpCenterDist) {
+            *perpCenterDist = perpDistance;
+        }
+        return true;
+    }
+
+    return false;
 }

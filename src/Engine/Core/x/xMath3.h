@@ -130,7 +130,7 @@ public:
     F32 height;
     F32 angle;
 
-    bool Inside(const xVec3& pos, F32 radius, F32* perpCenterDist) const; // UNUSED
+    bool Inside(const xVec3& pos, F32 radius, F32* perpCenterDist) const;
 };
 
 class xPlane
@@ -346,7 +346,7 @@ inline void xMat4x3Copy(xMat4x3* o, const xMat4x3* m)
 void xMat4x3Orthonormalize(xMat4x3* o, const xMat4x3* m); // UNUSED
 void xMat4x3Rot(xMat4x3* m, const xVec3* a, F32 t, const xVec3* p);
 void xMat4x3RotX(xMat4x3* m, F32 t, const xVec3* p); // UNUSED
-void xMat4x3RotY(xMat4x3* m, F32 t, const xVec3* p); // UNUSED
+void xMat4x3RotY(xMat4x3* m, F32 t, const xVec3* p);
 void xMat4x3RotZ(xMat4x3* m, F32 t, const xVec3* p); // UNUSED
 void xMat4x3Mul(xMat4x3* o, const xMat4x3* a, const xMat4x3* b);
 void xMat4x3LMul3x3(xMat4x3* o, const xMat4x3* m, const xMat3x3* m3x3); // UNUSED
