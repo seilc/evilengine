@@ -382,7 +382,9 @@ xCam* xCamGroup::get_blend(xCamTransition* transition, xCam& to)
         xCamBlend* blend = grab_blend_cam();
         xASSERT_MSG_L(473, blend != 0, "Ran out of blend cameras.");
         if (!blend) return &to;
+#if GAME == RAT
         blend->blender = NULL;
+#endif
 
         blend->attach(*primary, to);
 
@@ -622,8 +624,12 @@ void xCamTimeBias::Update(F32 dt)
 
 void xCamTimeBias::Reverse()
 {
+#if GAME == RAT
     time = blendTime - time; if (time < 0.0f)
         time = 0.0f;
+#else
+    time = blendTime - time;
+#endif
     CalcBias();
 }
 
@@ -696,7 +702,9 @@ void xCamBlend::start()
 
     xASSERT_L(893, (src != 0) && (dst != 0));
     if (!src->started()) {
+#if GAME == RAT
         src->group = group;
+#endif
         src->mat = mat;
         src->coll_mat = coll_mat;
         src->fov = fov;
@@ -704,7 +712,9 @@ void xCamBlend::start()
     }
 
     if (!dst->started()) {
+#if GAME == RAT
         dst->group = group;
+#endif
         dst->mat = mat;
         dst->coll_mat = coll_mat;
         dst->fov = fov;
@@ -742,7 +752,9 @@ void xCamBlend::stop()
 
     group->notify_released(*src);
     group->notify_released(*dst);
+#if GAME == RAT
     blender = NULL;
+#endif
 
     if (bias->DidComplete()) {
         if (bias->GetBias() < 0.5f) {

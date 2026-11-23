@@ -631,7 +631,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xBase.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xbinio.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xBound.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xCam.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCam.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCamFollow.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xCamSupport.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xCamTransition.cpp", sym="on"),
