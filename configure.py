@@ -1022,7 +1022,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zShowerSystem.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zShrapnel.cpp"),
             GameObject(NonMatching, "Engine/Game/zShrapnelEmitter.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zSlideCamera.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zSlideCamera.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zSmashRing.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zSmoke.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zSparkEmitter.cpp", sym="on"),
