@@ -950,7 +950,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zNPCGate.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zNPCGroup.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCInstaKill.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zNPCLevelSpecific.cpp", sym="on"),
+            GameObject(MatchingFor("RAT"), "Engine/Game/zNPCLevelSpecific.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCManager.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zNPCMgr.cpp"),
             GameObject(NonMatching, "Engine/Game/zNPCMove.cpp", sym="on"),
