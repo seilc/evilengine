@@ -13,6 +13,9 @@
 #include "zPlayer.h"
 #include "zScene.h"
 #include "iMath.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 
 #include <stdio.h>
 #include <string.h>

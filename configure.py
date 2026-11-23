@@ -730,7 +730,7 @@ config.libs = [
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xsavegame.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xScene.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xScreenFade.cpp", sym="on"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xScreenWarp.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xScreenWarp.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xScrFx.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xScrPulseGlare.cpp", sym="on"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xserializer.cpp"),
