@@ -680,7 +680,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xHudModel.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xHudText.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xHudUnitMeter.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xIM.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xIM.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xIni.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xJaw.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xJSP.cpp"),

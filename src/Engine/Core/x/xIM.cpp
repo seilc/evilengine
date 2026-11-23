@@ -135,7 +135,11 @@ void xIMRender(xIMLockContext& context, const xMat4x3* mat, U32 flags)
     xMEMPOPTEMP(vert_buffer);
 }
 
+#if GAME == RAT
 void xIM2DRenderQuad(F32 x1, F32 y1, F32 x2, F32 y2, F32 uMax, F32 vMax, U32 alpha, U32 r, U32 g, U32 b)
+#else
+void xIM2DRenderQuad(F32 x1, F32 y1, F32 x2, F32 y2, F32 uMax, F32 vMax, U32 alpha)
+#endif
 {
     RwReal z = RwIm2DGetNearScreenZ();
     RwReal recipCamZ = 1.0f / RwCameraGetNearClipPlane(RwCameraGetCurrentCamera());
@@ -145,28 +149,44 @@ void xIM2DRenderQuad(F32 x1, F32 y1, F32 x2, F32 y2, F32 uMax, F32 vMax, U32 alp
     RwIm2DVertexSetScreenX(&vx[0], x1);
     RwIm2DVertexSetScreenY(&vx[0], y1);
     RwIm2DVertexSetScreenZ(&vx[0], z);
+#if GAME == RAT
     RwIm2DVertexSetIntRGBA(&vx[0], r, g, b, alpha);
+#else
+    RwIm2DVertexSetIntRGBA(&vx[0], 255, 255, 255, alpha);
+#endif
     RwIm2DVertexSetU(&vx[0], 0.0f, recipCamZ);
     RwIm2DVertexSetV(&vx[0], 0.0f, recipCamZ);
 
     RwIm2DVertexSetScreenX(&vx[1], x1);
     RwIm2DVertexSetScreenY(&vx[1], y2);
     RwIm2DVertexSetScreenZ(&vx[1], z);
+#if GAME == RAT
     RwIm2DVertexSetIntRGBA(&vx[1], r, g, b, alpha);
+#else
+    RwIm2DVertexSetIntRGBA(&vx[1], 255, 255, 255, alpha);
+#endif
     RwIm2DVertexSetU(&vx[1], 0.0f, recipCamZ);
     RwIm2DVertexSetV(&vx[1], vMax, recipCamZ);
 
     RwIm2DVertexSetScreenX(&vx[2], x2);
     RwIm2DVertexSetScreenY(&vx[2], y1);
     RwIm2DVertexSetScreenZ(&vx[2], z);
+#if GAME == RAT
     RwIm2DVertexSetIntRGBA(&vx[2], r, g, b, alpha);
+#else
+    RwIm2DVertexSetIntRGBA(&vx[2], 255, 255, 255, alpha);
+#endif
     RwIm2DVertexSetU(&vx[2], uMax, recipCamZ);
     RwIm2DVertexSetV(&vx[2], 0.0f, recipCamZ);
 
     RwIm2DVertexSetScreenX(&vx[3], x2);
     RwIm2DVertexSetScreenY(&vx[3], y2);
     RwIm2DVertexSetScreenZ(&vx[3], z);
+#if GAME == RAT
     RwIm2DVertexSetIntRGBA(&vx[3], r, g, b, alpha);
+#else
+    RwIm2DVertexSetIntRGBA(&vx[3], 255, 255, 255, alpha);
+#endif
     RwIm2DVertexSetU(&vx[3], uMax, recipCamZ);
     RwIm2DVertexSetV(&vx[3], vMax, recipCamZ);
 
