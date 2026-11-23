@@ -7,6 +7,9 @@
 #include "decomp.h"
 
 #include <stdio.h>
+#if GAME != RAT
+#include <stdlib.h>
+#endif
 #include <string.h>
 
 #if DEBUG || RELEASE
@@ -49,6 +52,13 @@ void xMathExit()
 
     xmath_exited = TRUE;
 }
+
+#if GAME != RAT
+F32 xatof(const char* x)
+{
+    return atof(x);
+}
+#endif
 
 #if DEBUG || RELEASE
 DECOMP_FORCEACTIVE(

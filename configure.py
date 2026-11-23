@@ -689,7 +689,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xLightEffect.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xLightKit.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xLightVolume.cpp", sym="on"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xMath.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xMath.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xMath2.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xMath3.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xMemMgr.cpp"),
