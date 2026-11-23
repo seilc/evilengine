@@ -22,6 +22,9 @@
 #include "zEvent.h"
 #include "zPlayer.h"
 #include "zGrid.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -851,7 +854,6 @@ void xLightSetRadius(xLight* xl, F32 radius)
     iLightSetRadius(&xl->light, radius);
 }
 
-// UNUSED: needed to match (code from RotU GC)
 void xLightSetLightCardScale(xLight* xl, F32 scale)
 {
     xASSERT(scale >= 0);
