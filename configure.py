@@ -664,7 +664,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFilter.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFMV.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFog.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xFont.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFont.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFunctionGenerator.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFX.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xFXCameraTexture.cpp", sym="on"),

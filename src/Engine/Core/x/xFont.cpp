@@ -1801,7 +1801,7 @@ size_t xtextbox::read_list(const tag_entry& e, F32* v, size_t vsize)
 {
     size_t total = MIN(vsize, e.args_size);
     for (size_t i = 0; i < total; i++)
-        v[i] = xStrParseFloat(e.args[i].text);
+        v[i] = xatof(e.args[i].text);
     return total;
 }
 
@@ -2254,7 +2254,7 @@ bool xtextbox::layout::changed(const xtextbox& ctb)
         static const xtextbox::callback cb = { NULL, update_tag_##name, update_tag_##name };                                                        \
         F32& v = *(F32*)&a.context;                                                                                                                 \
         if (!ti.value.size || !ti.action.size) return;                                                                                              \
-        v = xStrParseFloat(ti.value.text);                                                                                                          \
+        v = xatof(ti.value.text);                                                                                                                   \
         switch (ti.action.text[0]) {                                                                                                                \
         case '=':                                                                                                                                   \
             break;                                                                                                                                  \
@@ -2293,7 +2293,7 @@ bool xtextbox::layout::changed(const xtextbox& ctb)
         static const xtextbox::callback cb = { NULL, layout ? update_tag_##name : NULL, render ? update_tag_##name : NULL };                        \
         F32& v = *(F32*)&a.context;                                                                                                                 \
         if (!ti.value.size || !ti.action.size) return;                                                                                              \
-        v = xStrParseFloat(ti.value.text);                                                                                                          \
+        v = xatof(ti.value.text);                                                                                                                   \
         switch (ti.action.text[0]) {                                                                                                                \
         case '=':                                                                                                                                   \
             break;                                                                                                                                  \
