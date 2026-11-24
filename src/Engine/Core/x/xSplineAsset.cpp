@@ -1,25 +1,37 @@
 #include "xCommon.h"
 #include "xSplineAsset.h"
 
+#if GAME == RAT
 #include "xRenderState.h"
+#endif
 
 #include "decomp.h"
 
 #define MAX_DEPTH ((U32)10)
 
+#if GAME == RAT
 const S32 NURBS_DRAW_MAX = 256;
+#endif
 
 F32 xNurbs::approximate_length(S32 divisions) const
 {
     F32 division_size = (end() - start()) / divisions;
     F32 length = 0.0f;
 
+#if GAME == RAT
     xVec3 last_point;
     evaluate(start(), last_point);
+#else
+    xVec3 last_point = evaluate(start());
+#endif
 
     for (F32 t = division_size + start(); t <= end(); t += division_size) {
+#if GAME == RAT
         xVec3 point;
         evaluate(t, point);
+#else
+        xVec3 point = evaluate(t);
+#endif
         length += point.Distance(last_point);
         last_point = point;
     }
@@ -165,6 +177,15 @@ F32 xNurbs::end() const
     return knot[controlMaxIndex + 1];
 }
 
+#if GAME != RAT
+xVec3 xNurbs::evaluate(F32 u) const
+{
+    xVec3 point;
+    evaluate(u, point);
+    return point;
+}
+#endif
+
 void xNurbs::evaluate(F32 u, xVec3& point) const
 {
     xASSERT_L(222, (u >= start()) && (u <= end()));
@@ -230,18 +251,29 @@ xVec3 xNurbs::project_point(const xVec3& point, F32* u, F32* distance, F32 guess
         length2 = point.Distance2(curve_point);
     }
     
+#if GAME == RAT
     F32 minLength2 = length2;
     F32 minU = guess;
     xVec3 minPoint = curve_point;
+#endif
 
     for (S32 depth = 0; depth < MAX_DEPTH; depth++) {
         if (length2 < 0.01f) {
+#if GAME == RAT
             if (u)
                 *u = minU;
             if (distance) {
                 *distance = xsqrt(minLength2);
             }
             return minPoint;
+#else
+            if (u)
+                *u = guess;
+            if (distance) {
+                *distance = xsqrt(length2);
+            }
+            return curve_point;
+#endif
         }
 
         xVec3 point_to_curve = {
@@ -256,12 +288,21 @@ xVec3 xNurbs::project_point(const xVec3& point, F32* u, F32* distance, F32 guess
         // 0.015707318f = sin(0.9deg)
         if (xabs(curve_tangent.dot(point_to_curve)) <
             0.015707318f * xabs(point_to_curve.length() * curve_tangent.length())) {
+#if GAME == RAT
             if (u)
                 *u = minU;
             if (distance) {
                 *distance = xsqrt(minLength2);
             }
             return minPoint;
+#else
+            if (u)
+                *u = guess;
+            if (distance) {
+                *distance = xsqrt(length2);
+            }
+            return curve_point;
+#endif
         }
 
         xVec3 curve_2nd_derivative;
@@ -269,15 +310,26 @@ xVec3 xNurbs::project_point(const xVec3& point, F32* u, F32* distance, F32 guess
 
         F32 last_guess = guess;
         F32 denom = curve_2nd_derivative.dot(point_to_curve) + curve_tangent.length2();
+#if GAME == RAT
         if (xabs(denom) < 0.25f) {
             denom = 1.0f;
         }
 
         guess -= curve_tangent.dot(point_to_curve) / denom;
+#else
+        if (denom < 0.25f) {
+            guess += curve_tangent.x * (point.x - curve_point.x) +
+                     curve_tangent.y * (point.y - curve_point.y) +
+                     curve_tangent.z * (point.z - curve_point.z);
+        } else {
+            guess -= curve_tangent.dot(point_to_curve) / denom;
+        }
+#endif
         guess = CLAMP(guess, start(), end());
         
         evaluate(guess, curve_point);
 
+#if GAME == RAT
         length2 = curve_point.Distance2(point);
         if (length2 <= minLength2) {
             minLength2 = length2;
@@ -293,6 +345,16 @@ xVec3 xNurbs::project_point(const xVec3& point, F32* u, F32* distance, F32 guess
             }
             return minPoint;
         }
+#else
+        if (xabs(last_guess - guess) < 0.05f) {
+            if (u)
+                *u = guess;
+            if (distance) {
+                *distance = xsqrt(length2);
+            }
+            return curve_point;
+        }
+#endif
     }
 
     if (u)
@@ -303,6 +365,7 @@ xVec3 xNurbs::project_point(const xVec3& point, F32* u, F32* distance, F32 guess
     return curve_point;
 }
 
+#if GAME == RAT
 void xNurbs::getBoundBox(xBox& box) const
 {
     box.upper = box.lower = control[0];
@@ -393,6 +456,7 @@ void xNurbs::DrawCrossSection(S32 segments, F32 width) const
 
     xRenderStateBlendAndZModesSet(srcBlend, destBlend, TRUE, TRUE);
 }
+#endif
 
 namespace {
 

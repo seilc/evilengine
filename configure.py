@@ -746,7 +746,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xSoundFX.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xSpacePartitionTree.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xSpline.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xSplineAsset.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xSplineAsset.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xSpringy.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xstransvc.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xString.cpp"),

@@ -19,14 +19,19 @@ public:
     void find_derivative_basis_functions(F32 u, S32 i, S32 order, F32 ders[5][5]) const;
     F32 start() const;
     F32 end() const;
+#if GAME != RAT
+    xVec3 evaluate(F32 u) const;
+#endif
     void evaluate(F32 u, xVec3& point) const;
     xVec3 evaluate(F32 u, S32 d) const;
     void evaluate(F32 u, S32 d, xVec3& point) const;
     xVec3 project_point(const xVec3& point, F32* u, F32* distance, F32 guess) const;
     xNurbs(S32 degree, S32 knot_count, xVec3* control, F32* knot); // UNUSED
+#if GAME == RAT
     void getBoundBox(xBox& box) const;
     void AddCrossSectionPos(xVec3& lastPos, xVec3& centerLinePos, F32 halfWidth) const;
     void DrawCrossSection(S32 segments, F32 width) const;
+#endif
 #if DEBUG || RELEASE
     void Draw(S32 segments) const; // UNUSED
 #endif
