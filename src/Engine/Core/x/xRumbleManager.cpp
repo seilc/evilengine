@@ -4,6 +4,9 @@
 #include "xGlobals.h"
 #include "zPlayer.h"
 #include "zScene.h"
+#if GAME == ROTU
+#include "xSpacePartitionTree.h"
+#endif
 
 #include <string.h>
 
@@ -113,7 +116,11 @@ bool Manager::Add(xPad* pad, emitterBase* pEmitter)
         if (CURPLAYERS[i]->IsDead() && pEmitter->pEffectAsset->id != xStrHash("VibrationSet"))
             counter++;
     }
+#if GAME == RAT
     if (counter == CURPLAYERS.size()) {
+#else
+    if (counter == 2) {
+#endif
         return false;
     }
 
@@ -233,6 +240,17 @@ void Manager::Update(xPad* pad, const xVec3& playerPos, F32 timeElapsed, bool bP
     }
 }
 
+F32 Manager::GetRumbleTimeLeft(xPad* pad, emitterBase* pEmitter)
+{
+    padInfo* pInfo = &m_padInfo[pad->port];
+    for (U32 i = 0; i < k_XRUMBLE_MAX_EFFECTS; i++) {
+        if (pInfo->m_effects[i].pEmitter && pEmitter->pEffectAsset == pInfo->m_effects[i].pEmitter->pEffectAsset) {
+            return pInfo->m_effects[i].timeToLive;
+        }
+    }
+    return 0.0f;
+}
+
 Manager& Manager::Get()
 {
     static Manager rumbleManager;
@@ -258,6 +276,12 @@ void Manager::StopRumbling()
     }
 }
 
+void Manager::ClearRumbling(xPad* pad)
+{
+    iPadStopRumble(pad);
+    memset(&m_padInfo[pad->port], 0, sizeof(padInfo));
+}
+
 void Manager::StopCameraShake(S32 padNum)
 {
     padInfo* pInfo = &m_padInfo[padNum];
@@ -266,6 +290,17 @@ void Manager::StopCameraShake(S32 padNum)
             pInfo->m_effects[j].EndCameraShake();
         }
     }
+}
+
+void Manager::Clear(xPad* pad)
+{
+    StopCameraShake(pad);
+    ClearRumbling(pad);
+}
+
+void Manager::StopCameraShake(xPad* pad)
+{
+    StopCameraShake(pad->port);
 }
 
 void Manager::StopCameraShake()

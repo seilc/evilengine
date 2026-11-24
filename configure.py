@@ -731,7 +731,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xRenderState.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xRMemData.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xRumbleEmitter.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xRumbleManager.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xRumbleManager.cpp"),
             GameObject(MatchingFor("RAT"), "Engine/Core/x/xsavegame.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xScene.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xScreenFade.cpp", sym="on"),
