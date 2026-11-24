@@ -711,7 +711,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xOneLiner.cpp", sym="on"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xordarray.cpp"),
             GameObject(Matching, "Engine/Core/x/xOutputMgr.cpp"),
-            GameObject(MatchingFor("RAT"), "Engine/Core/x/xPad.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xPad.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xPar.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xParCmd.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Core/x/xParEmitter.cpp"),

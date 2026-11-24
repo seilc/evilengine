@@ -87,7 +87,11 @@ S32 xPadUpdate(S32 idx, F32 time_passed)
     if (zScene_ScreenAdjustMode()) {
         xPadAnalogIsDigital(idx, FALSE);
     }
+#if GAME == RAT
     else if (zMenuRunning() || zGameIsPaused() || globals.mgManager->IsMiniGamePaused()) {
+#else
+    else if (zMenuRunning() || zGameIsPaused()) {
+#endif
         xPadAnalogIsDigital(idx, TRUE);
     } else {
         xPadAnalogIsDigital(idx, FALSE);
