@@ -1081,7 +1081,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zUIMgr.cpp"),
             GameObject(NonMatching, "Engine/Game/zUIModel.cpp"),
             GameObject(NonMatching, "Engine/Game/zUIText.cpp"),
-            GameObject(NonMatching, "Engine/Game/zUIUserString.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zUIUserString.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zUIUVs.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zVar.cpp"),
             GameObject(NonMatching, "Engine/Game/zVent.cpp", sym="on"),
