@@ -804,7 +804,7 @@ config.libs = [
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zAsync.cpp", sym="on"),
             GameObject(Matching, "Engine/Game/zBase.cpp"),
             GameObject(NonMatching, "Engine/Game/zBehavior.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zBomb.cpp", sym="on"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zBomb.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zButtonMasherWidget.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCam.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zCam2Player.cpp", sym="on"),
