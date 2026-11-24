@@ -897,7 +897,7 @@ config.libs = [
             GameObject(NonMatching, "Engine/Game/zGameExtras.cpp"),
             GameObject(NonMatching, "Engine/Game/zGameState.cpp"),
             GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zGoo.cpp", sym="on"),
-            GameObject(NonMatching, "Engine/Game/zGrapple.cpp"),
+            GameObject(MatchingFor("RAT", "ROTU"), "Engine/Game/zGrapple.cpp"),
             GameObject(NonMatching, "Engine/Game/zGrass.cpp", sym="on"),
             GameObject(NonMatching, "Engine/Game/zGrid.cpp"),
             GameObject(NonMatching, "Engine/Game/zHangable.cpp"),
